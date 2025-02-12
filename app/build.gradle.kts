@@ -33,15 +33,25 @@ android {
 }
 
 dependencies {
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+
+    // Firebase
     implementation(libs.firebase.auth)
     implementation(libs.firebase.database)
+    implementation("com.google.firebase:firebase-firestore:24.4.1") // Firestore אם תשתמשי
+    implementation("com.google.firebase:firebase-analytics:21.4.1") // Firebase Analytics (לא חובה)
+
+    // RecyclerView (הכרחי כדי להציג נתונים)
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
+
+    // Navigation Components
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
+
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
