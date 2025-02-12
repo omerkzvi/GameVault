@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "com.example.finalproject"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.finalproject"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -41,8 +41,9 @@ dependencies {
     // Firebase
     implementation(libs.firebase.auth)
     implementation(libs.firebase.database)
-    implementation("com.google.firebase:firebase-firestore:24.4.1") // Firestore אם תשתמשי
-    implementation("com.google.firebase:firebase-analytics:21.4.1") // Firebase Analytics (לא חובה)
+    //implementation("com.google.firebase:firebase-firestore:24.4.1") // Firestore אם תשתמשי
+   // implementation("com.google.firebase:firebase-analytics:21.4.0") // Firebase Analytics (לא חובה)
+    //implementation("com.google.firebase:firebase-analytics:21.3.0") // Firebase Analytics (לא חובה)
 
     // RecyclerView (הכרחי כדי להציג נתונים)
     implementation("androidx.recyclerview:recyclerview:1.2.1")

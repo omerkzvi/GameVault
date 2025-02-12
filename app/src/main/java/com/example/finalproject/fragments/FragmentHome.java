@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.finalproject.R;
+import com.example.finalproject.activities.MainActivity;
 
 /**
  * A simple {@link Fragment} subclass.
