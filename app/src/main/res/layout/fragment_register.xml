@@ -1,14 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.FragmentRegister">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@color/white"
+        tools:context=".fragments.FragmentRegister">
 
-</FrameLayout>
+        <EditText
+            android:id="@+id/enterUserNameReg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:hint="Enter User Name"
+            android:minHeight="48dp"
+            android:inputType="text"
+            />
+
+        <EditText
+            android:id="@+id/enterEmailReg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:hint="Enter Email"
+            android:inputType="textEmailAddress"
+            android:minHeight="48dp" />
+
+
+
+        <EditText
+            android:id="@+id/enterPasswordReg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:hint="Enter Password"
+            android:inputType="textPassword"
+            android:minHeight="48dp" />
+
+
+
+        <EditText
+            android:id="@+id/enterPhoneReg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="Enter Phone Number"
+            android:minHeight="48dp"
+            android:inputType="phone" />
+
+        <Button
+            android:id="@+id/registrationButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Register" />
+
+    </LinearLayout>
