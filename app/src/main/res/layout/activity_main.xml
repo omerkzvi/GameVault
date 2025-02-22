@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Hello User!"
+            android:text="Wellcome to Game Vault!"
             android:textSize="34sp" />
     </LinearLayout>
 
@@ -35,7 +35,7 @@
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+
             app:defaultNavHost="true"
             app:navGraph="@navigation/navgraph" />
     </LinearLayout>

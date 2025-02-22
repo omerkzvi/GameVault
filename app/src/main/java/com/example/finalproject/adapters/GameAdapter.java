@@ -1,21 +1,23 @@
 package com.example.finalproject.adapters;
+
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.finalproject.R;
 import com.example.finalproject.models.Game;
-
 import java.util.List;
 
 public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder> {
     private List<Game> gameList;
+    private Context context;
 
-    public GameAdapter(List<Game> gameList) {
+    public GameAdapter(List<Game> gameList, Context context) {
         this.gameList = gameList;
+        this.context = context;
     }
 
     @NonNull
@@ -31,7 +33,6 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
         holder.title.setText(game.getTitle());
         holder.genre.setText(game.getGenre());
         holder.publisher.setText(game.getPublisher());
-        holder.releaseDate.setText(game.getReleaseDate());
     }
 
     @Override
@@ -39,15 +40,20 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
         return gameList.size();
     }
 
+    public void updateList(List<Game> newList) {
+        gameList.clear();
+        gameList.addAll(newList);
+        notifyDataSetChanged();
+    }
+
     public static class GameViewHolder extends RecyclerView.ViewHolder {
-        TextView title, genre, publisher, releaseDate;
+        TextView title, genre, publisher;
 
         public GameViewHolder(View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.gameTitle);
             genre = itemView.findViewById(R.id.gameGenre);
             publisher = itemView.findViewById(R.id.gamePublisher);
-            releaseDate = itemView.findViewById(R.id.gameReleaseDate);
         }
     }
 }

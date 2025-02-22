@@ -1,8 +1,10 @@
 package com.example.finalproject.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -25,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
+    private SearchView searchView;
 
 
     @Override
@@ -38,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
         mAuth = FirebaseAuth.getInstance();
-
     }
 
     public void reg(View view) {
@@ -84,7 +86,12 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Toast.makeText(MainActivity.this, "Login Successful", Toast.LENGTH_LONG).show();
-                            Navigation.findNavController(view).navigate(R.id.action_fragmentHome_to_fragmentGames);
+                            int currentDest = Navigation.findNavController(MainActivity.this, R.id.fragmentContainerView)
+                                    .getCurrentDestination().getId();
+                            Log.d("NavCheck", "Current Destination: " + getResources().getResourceName(currentDest));
+
+                            Navigation.findNavController(MainActivity.this, R.id.fragmentContainerView)
+                                    .navigate(R.id.action_fragmentHome_to_fragmentGames);
                         } else {
                             // If sign in fails, display a message to the user.
                             Toast.makeText(MainActivity.this, "Login Unsuccessful", Toast.LENGTH_LONG).show();

@@ -52,6 +52,11 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
 
+    //noinspection UseTomlInstead
+    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation (libs.material.v1100)
+
+
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
