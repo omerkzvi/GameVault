@@ -1,58 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context=".fragments.FragmentRegister">
+
+    <!-- הוספת רקע כהה חצי שקוף לטופס -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:background="@color/white"
-        tools:context=".fragments.FragmentRegister">
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+    android:layout_marginBottom="80dp"
+    android:background="@drawable/form_background"
+    android:orientation="vertical"
+    android:padding="24dp">
 
-        <EditText
-            android:id="@+id/enterUserNameReg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:hint="Enter User Name"
-            android:minHeight="48dp"
-            android:inputType="text"
-            />
+    <EditText
+        android:id="@+id/enterUserNameReg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/rounded_white_bg"
+        android:backgroundTintMode="add"
+        android:hint="Enter User Name"
+        android:inputType="text"
+        android:minHeight="48dp" />
 
-        <EditText
-            android:id="@+id/enterEmailReg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:hint="Enter Email"
-            android:inputType="textEmailAddress"
-            android:minHeight="48dp" />
+    <EditText
+        android:id="@+id/enterEmailReg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/rounded_white_bg"
+        android:hint="Enter Email"
+        android:inputType="textEmailAddress"
+        android:minHeight="48dp" />
 
+    <EditText
+        android:id="@+id/enterPasswordReg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/rounded_white_bg"
+        android:hint="Enter Password"
+        android:inputType="textPassword"
+        android:minHeight="48dp" />
 
+    <EditText
+        android:id="@+id/enterPhoneReg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/rounded_white_bg"
+        android:hint="Enter Phone Number"
+        android:inputType="phone"
+        android:minHeight="48dp" />
 
-        <EditText
-            android:id="@+id/enterPasswordReg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:hint="Enter Password"
-            android:inputType="textPassword"
-            android:minHeight="48dp" />
-
-
-
-        <EditText
-            android:id="@+id/enterPhoneReg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:hint="Enter Phone Number"
-            android:minHeight="48dp"
-            android:inputType="phone" />
-
-        <Button
-            android:id="@+id/registrationButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Register" />
-
-    </LinearLayout>
+    <Button
+        android:id="@+id/registrationButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_button_bg"
+        android:padding="12dp"
+        android:text="Register"
+        android:textColor="@android:color/white" />
+</LinearLayout>
+    </FrameLayout>
