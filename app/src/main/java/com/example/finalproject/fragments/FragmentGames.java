@@ -34,8 +34,10 @@ public class FragmentGames extends Fragment {
     private List<Game> filteredList = new ArrayList<>();
     private DatabaseReference databaseReference;
     private SearchView searchView;
-    private Spinner filterSpinner;
-    private String selectedFilter = "All";
+
+    // ספינרים לסינון
+    private Spinner yearSpinner, genreSpinner, publisherSpinner, seriesSpinner;
+    private String selectedYear = "", selectedGenre = "", selectedPublisher = "", selectedSeries = "";
     private String searchText = "";
 
     public FragmentGames() {
@@ -49,11 +51,13 @@ public class FragmentGames extends Fragment {
         // קישור לאלמנטים ב-XML
         recyclerView = view.findViewById(R.id.recyclerView);
         searchView = view.findViewById(R.id.searchView);
-        filterSpinner = view.findViewById(R.id.filterSpinner);
+        yearSpinner = view.findViewById(R.id.yearSpinner);
+        genreSpinner = view.findViewById(R.id.genreSpinner);
+        publisherSpinner = view.findViewById(R.id.publisherSpinner);
+        seriesSpinner = view.findViewById(R.id.seriesSpinner);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        gameAdapter = new GameAdapter(filteredList, getContext()); // משתמשים ב-filteredList
+        gameAdapter = new GameAdapter(filteredList, getContext());
         recyclerView.setAdapter(gameAdapter);
 
         // טעינת נתונים מ-Firebase
@@ -76,16 +80,37 @@ public class FragmentGames extends Fragment {
             }
         });
 
-        // סינון לפי קטגוריה ב-Spinner
-        filterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        // הגדרת ספינרים והאזנה לבחירות המשתמשים
+        setupSpinner(yearSpinner, new SelectionListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedFilter = parent.getItemAtPosition(position).toString();
+            public void onItemSelected(String value) {
+                selectedYear = value.equals("All") ? "" : value;
                 applyFilters();
             }
+        });
 
+        setupSpinner(genreSpinner, new SelectionListener() {
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onItemSelected(String value) {
+                selectedGenre = value.equals("All") ? "" : value;
+                applyFilters();
+            }
+        });
+
+        setupSpinner(publisherSpinner, new SelectionListener() {
+            @Override
+            public void onItemSelected(String value) {
+                selectedPublisher = value.equals("All") ? "" : value;
+                applyFilters();
+            }
+        });
+
+        setupSpinner(seriesSpinner, new SelectionListener() {
+            @Override
+            public void onItemSelected(String value) {
+                selectedSeries = value.equals("All") ? "" : value;
+                applyFilters();
+            }
         });
 
         return view;
@@ -116,7 +141,7 @@ public class FragmentGames extends Fragment {
         });
     }
 
-    // מסנן את הרשימה לפי שם המשחק וגם לפי הפילטר
+    // מסנן את הרשימה לפי שם המשחק וגם לפי הפילטרים שנבחרו
     private void applyFilters() {
         filteredList.clear();
 
@@ -124,22 +149,40 @@ public class FragmentGames extends Fragment {
             String gameYear = extractYear(game.getReleaseDate());
 
             boolean matchesSearch = searchText.isEmpty() || game.getTitle().toLowerCase().contains(searchText.toLowerCase());
-            boolean matchesFilter = selectedFilter.equals("All")
-                    || (selectedFilter.equals("Year") && gameYear.equals("2022"))
-                    || (selectedFilter.equals("Publisher") && game.getPublisher().equalsIgnoreCase("Nintendo"))
-                    || (selectedFilter.equals("Genre") && game.getGenre().equalsIgnoreCase("Action-Adventure"));
+            boolean matchesYear = selectedYear.isEmpty() || gameYear.equals(selectedYear);
+            boolean matchesPublisher = selectedPublisher.isEmpty() || game.getPublisher().equalsIgnoreCase(selectedPublisher);
+            boolean matchesGenre = selectedGenre.isEmpty() || game.getGenre().equalsIgnoreCase(selectedGenre);
+            boolean matchesSeries = selectedSeries.isEmpty() || game.getSeriesName().equalsIgnoreCase(selectedSeries);
 
-            if (matchesSearch && matchesFilter) {
+            if (matchesSearch && matchesYear && matchesPublisher && matchesGenre && matchesSeries) {
                 filteredList.add(game);
             }
         }
         gameAdapter.updateList(filteredList);
     }
 
+    // פונקציה כללית לטיפול בבחירת ספינר
+    private void setupSpinner(Spinner spinner, final SelectionListener listener) {
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                listener.onItemSelected(parent.getItemAtPosition(position).toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+    }
+
+    // ממשק לניהול בחירת פריטים בספינר
+    interface SelectionListener {
+        void onItemSelected(String value);
+    }
+
     // פונקציה שמוציאה רק את השנה מהתאריך
     private String extractYear(String date) {
-        if (date == null || date.isEmpty()) return ""; // אם אין תאריך מחזיר מחרוזת ריקה
+        if (date == null || date.isEmpty()) return "";
         String[] parts = date.split(" ");
-        return (parts.length >= 3) ? parts[2] : ""; // מחזיר רק את השנה
+        return (parts.length >= 3) ? parts[2] : "";
     }
 }
