@@ -1,19 +1,16 @@
 package com.example.finalproject.adapters;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.view.menu.MenuView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.finalproject.R;
 import com.example.finalproject.models.Game;
 
@@ -39,10 +36,16 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
     @Override
     public void onBindViewHolder(@NonNull GameViewHolder holder, int position) {
         Game game = gameList.get(position);
+
         holder.gameTitle.setText(game.getTitle());
         holder.gameGenre.setText(game.getGenre());
         holder.gamePublisher.setText(game.getDeveloper());
         holder.gameReleaseDate.setText(game.getReleaseDate());
+
+        // טעינת תמונת המשחק עם Glide
+        Glide.with(context)
+                .load(game.getImageUrl()) // URL של התמונה מה-API
+                .into(holder.gameImage);
     }
 
     @Override
@@ -51,12 +54,13 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
     }
 
     public void updateList(List<Game> newList) {
-        gameList = new ArrayList<>(newList); // מעדכן את הרשימה
-        notifyDataSetChanged(); // מעדכן את ה-RecyclerView
+        gameList = new ArrayList<>(newList);
+        notifyDataSetChanged();
     }
+
     public static class GameViewHolder extends RecyclerView.ViewHolder {
         TextView gameTitle, gameGenre, gamePublisher, gameReleaseDate;
-        ImageButton playTrailerButton;
+        ImageView gameImage;
 
         public GameViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -64,6 +68,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
             gameGenre = itemView.findViewById(R.id.gameGenre);
             gamePublisher = itemView.findViewById(R.id.gamePublisher);
             gameReleaseDate = itemView.findViewById(R.id.gameReleaseDate);
+            gameImage = itemView.findViewById(R.id.gameImage); // מקשרים לתמונה
         }
     }
 }
