@@ -1,14 +1,20 @@
 package com.example.finalproject.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.finalproject.R;
 import com.example.finalproject.models.Game;
+
 import java.util.List;
 
 public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder> {
@@ -30,9 +36,20 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
     @Override
     public void onBindViewHolder(@NonNull GameViewHolder holder, int position) {
         Game game = gameList.get(position);
-        holder.title.setText(game.getTitle());
-        holder.genre.setText(game.getGenre());
-        holder.publisher.setText(game.getPublisher());
+        holder.gameTitle.setText(game.getTitle());
+        holder.gameGenre.setText(game.getGenre());
+        holder.gamePublisher.setText(game.getPublisher());
+        holder.gameReleaseDate.setText(game.getReleaseDate());
+
+        // מאזין לכפתור Play
+        holder.playTrailerButton.setOnClickListener(v -> {
+            String trailerUrl = game.getTrailerUrl();
+            if (trailerUrl != null && !trailerUrl.isEmpty()) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerUrl));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -40,20 +57,17 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
         return gameList.size();
     }
 
-    public void updateList(List<Game> newList) {
-        gameList.clear();
-        gameList.addAll(newList);
-        notifyDataSetChanged();
-    }
-
     public static class GameViewHolder extends RecyclerView.ViewHolder {
-        TextView title, genre, publisher;
+        TextView gameTitle, gameGenre, gamePublisher, gameReleaseDate;
+        ImageButton playTrailerButton;
 
-        public GameViewHolder(View itemView) {
+        public GameViewHolder(@NonNull View itemView) {
             super(itemView);
-            title = itemView.findViewById(R.id.gameTitle);
-            genre = itemView.findViewById(R.id.gameGenre);
-            publisher = itemView.findViewById(R.id.gamePublisher);
+            gameTitle = itemView.findViewById(R.id.gameTitle);
+            gameGenre = itemView.findViewById(R.id.gameGenre);
+            gamePublisher = itemView.findViewById(R.id.gamePublisher);
+            gameReleaseDate = itemView.findViewById(R.id.gameReleaseDate);
+            playTrailerButton = itemView.findViewById(R.id.playTrailerButton);
         }
     }
 }
