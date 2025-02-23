@@ -50,7 +50,7 @@
     </LinearLayout>
 
     <!-- כפתור PLAY -->
-    <ImageView
+    <ImageButton
         android:id="@+id/playButtonTr"
         android:layout_width="48dp"
         android:layout_height="48dp"

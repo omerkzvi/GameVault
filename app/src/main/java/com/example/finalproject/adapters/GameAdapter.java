@@ -66,7 +66,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
     }
     public static class GameViewHolder extends RecyclerView.ViewHolder {
         TextView gameTitle, gameGenre, gamePublisher, gameReleaseDate;
-        ImageView playTrailerButton;
+        ImageButton playTrailerButton;
 
         public GameViewHolder(@NonNull View itemView) {
             super(itemView);
