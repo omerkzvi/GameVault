@@ -41,18 +41,8 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
         Game game = gameList.get(position);
         holder.gameTitle.setText(game.getTitle());
         holder.gameGenre.setText(game.getGenre());
-        holder.gamePublisher.setText(game.getPublisher());
+        holder.gamePublisher.setText(game.getDeveloper());
         holder.gameReleaseDate.setText(game.getReleaseDate());
-
-        // מאזין לכפתור Play
-        holder.playTrailerButton.setOnClickListener(v -> {
-            String trailerUrl = game.getTrailerUrl();
-            if (trailerUrl != null && !trailerUrl.isEmpty()) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerUrl));
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -74,7 +64,6 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
             gameGenre = itemView.findViewById(R.id.gameGenre);
             gamePublisher = itemView.findViewById(R.id.gamePublisher);
             gameReleaseDate = itemView.findViewById(R.id.gameReleaseDate);
-            playTrailerButton = itemView.findViewById(R.id.playButtonTr);
         }
     }
 }
