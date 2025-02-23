@@ -10,11 +10,13 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.view.menu.MenuView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.finalproject.R;
 import com.example.finalproject.models.Game;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder> {
@@ -57,6 +59,10 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
         return gameList.size();
     }
 
+    public void updateList(List<Game> newList) {
+        gameList = new ArrayList<>(newList); // מעדכן את הרשימה
+        notifyDataSetChanged(); // מעדכן את ה-RecyclerView
+    }
     public static class GameViewHolder extends RecyclerView.ViewHolder {
         TextView gameTitle, gameGenre, gamePublisher, gameReleaseDate;
         ImageButton playTrailerButton;
@@ -67,7 +73,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
             gameGenre = itemView.findViewById(R.id.gameGenre);
             gamePublisher = itemView.findViewById(R.id.gamePublisher);
             gameReleaseDate = itemView.findViewById(R.id.gameReleaseDate);
-            playTrailerButton = itemView.findViewById(R.id.playTrailerButton);
+            playTrailerButton = itemView.findViewById(R.id.playButton);
         }
     }
 }
