@@ -31,10 +31,12 @@ public class FragmentGames extends Fragment {
     private RecyclerView recyclerView;
     private GameAdapter gameAdapter;
     private List<Game> gameList = new ArrayList<>();
+    private List<Game> filteredList = new ArrayList<>();
     private DatabaseReference databaseReference;
     private SearchView searchView;
     private Spinner filterSpinner;
     private String selectedFilter = "All";
+    private String searchText = "";
 
     public FragmentGames() {
         // Required empty public constructor
@@ -51,7 +53,7 @@ public class FragmentGames extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        gameAdapter = new GameAdapter(gameList, getContext());
+        gameAdapter = new GameAdapter(filteredList, getContext()); // משתמשים ב-filteredList
         recyclerView.setAdapter(gameAdapter);
 
         // טעינת נתונים מ-Firebase
@@ -61,13 +63,15 @@ public class FragmentGames extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                filterList(query);
+                searchText = query;
+                applyFilters();
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                filterList(newText);
+                searchText = newText;
+                applyFilters();
                 return false;
             }
         });
@@ -94,13 +98,15 @@ public class FragmentGames extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 gameList.clear();
-                for (DataSnapshot gameSnapshot : snapshot.getChildren()) {
-                    Game game = gameSnapshot.getValue(Game.class);
-                    if (game != null) {
-                        gameList.add(game);
+                if (snapshot.exists()) { // בודק אם יש נתונים
+                    for (DataSnapshot gameSnapshot : snapshot.getChildren()) {
+                        Game game = gameSnapshot.getValue(Game.class);
+                        if (game != null) {
+                            gameList.add(game);
+                        }
                     }
                 }
-                gameAdapter.updateList(gameList); // מציגים את הרשימה המקורית
+                applyFilters(); // עדכון התצוגה לאחר טעינה
             }
 
             @Override
@@ -110,31 +116,30 @@ public class FragmentGames extends Fragment {
         });
     }
 
-    // חיפוש לפי שם המשחק
-    private void filterList(String text) {
-        List<Game> tempList = new ArrayList<>();
-        for (Game game : gameList) {
-            if (game.getTitle().toLowerCase().contains(text.toLowerCase())) {
-                tempList.add(game);
-            }
-        }
-        gameAdapter.updateList(tempList);
-    }
-
-    // סינון לפי שנה / מפיצה / ז'אנר
+    // מסנן את הרשימה לפי שם המשחק וגם לפי הפילטר
     private void applyFilters() {
-        List<Game> tempList = new ArrayList<>();
+        filteredList.clear();
 
         for (Game game : gameList) {
+            String gameYear = extractYear(game.getReleaseDate());
+
+            boolean matchesSearch = searchText.isEmpty() || game.getTitle().toLowerCase().contains(searchText.toLowerCase());
             boolean matchesFilter = selectedFilter.equals("All")
-                    || (selectedFilter.equals("Year") && game.getReleaseDate().contains("2022"))
+                    || (selectedFilter.equals("Year") && gameYear.equals("2022"))
                     || (selectedFilter.equals("Publisher") && game.getPublisher().equalsIgnoreCase("Nintendo"))
                     || (selectedFilter.equals("Genre") && game.getGenre().equalsIgnoreCase("Action-Adventure"));
 
-            if (matchesFilter) {
-                tempList.add(game);
+            if (matchesSearch && matchesFilter) {
+                filteredList.add(game);
             }
         }
-        gameAdapter.updateList(tempList);
+        gameAdapter.updateList(filteredList);
+    }
+
+    // פונקציה שמוציאה רק את השנה מהתאריך
+    private String extractYear(String date) {
+        if (date == null || date.isEmpty()) return ""; // אם אין תאריך מחזיר מחרוזת ריקה
+        String[] parts = date.split(" ");
+        return (parts.length >= 3) ? parts[2] : ""; // מחזיר רק את השנה
     }
 }
