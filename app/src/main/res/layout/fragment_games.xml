@@ -4,57 +4,59 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:background="#90FFFFFF"
+    android:elevation="4dp">
 
     <!-- Free Search -->
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/searchView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:queryHint="Search games..." />
+<androidx.appcompat.widget.SearchView
+android:id="@+id/searchView"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:queryHint="Search games..." />
 
     <!-- Filtering Options -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Filter by Year:" />
-    <Spinner
-        android:id="@+id/yearSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="48dp" />
+<TextView
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Filter by Year:" />
+<Spinner
+android:id="@+id/yearSpinner"
+android:layout_width="match_parent"
+android:layout_height="48dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Filter by Genre:" />
-    <Spinner
-        android:id="@+id/genreSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="48dp" />
+<TextView
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Filter by Genre:" />
+<Spinner
+android:id="@+id/genreSpinner"
+android:layout_width="match_parent"
+android:layout_height="48dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Filter by Publisher:" />
-    <Spinner
-        android:id="@+id/publisherSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="48dp" />
+<TextView
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Filter by Publisher:" />
+<Spinner
+android:id="@+id/publisherSpinner"
+android:layout_width="match_parent"
+android:layout_height="48dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Filter by Series:" />
-    <Spinner
-        android:id="@+id/seriesSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="48dp" />
+<TextView
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Filter by Series:" />
+<Spinner
+android:id="@+id/seriesSpinner"
+android:layout_width="match_parent"
+android:layout_height="48dp" />
 
     <!-- RecyclerView -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp" />
+<androidx.recyclerview.widget.RecyclerView
+android:id="@+id/recyclerView"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:padding="10dp" />
 
-</LinearLayout>
+    </LinearLayout>
