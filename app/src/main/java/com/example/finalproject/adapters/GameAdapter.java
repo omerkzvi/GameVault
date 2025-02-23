@@ -66,7 +66,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
     }
     public static class GameViewHolder extends RecyclerView.ViewHolder {
         TextView gameTitle, gameGenre, gamePublisher, gameReleaseDate;
-        ImageButton playTrailerButton;
+        ImageView playTrailerButton;
 
         public GameViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -74,7 +74,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
             gameGenre = itemView.findViewById(R.id.gameGenre);
             gamePublisher = itemView.findViewById(R.id.gamePublisher);
             gameReleaseDate = itemView.findViewById(R.id.gameReleaseDate);
-            playTrailerButton = itemView.findViewById(R.id.playButton);
+            playTrailerButton = itemView.findViewById(R.id.playButtonTr);
         }
     }
 }

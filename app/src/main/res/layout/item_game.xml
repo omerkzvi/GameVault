@@ -6,14 +6,16 @@
     android:layout_height="wrap_content"
     android:padding="10dp">
 
+    <!-- תוכן המשחק -->
     <LinearLayout
         android:id="@+id/gameInfoLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingEnd="10dp"
+        android:layout_weight="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/playButton"
+        app:layout_constraintEnd_toStartOf="@id/playButtonTr"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
@@ -47,9 +49,9 @@
             android:textSize="16sp" />
     </LinearLayout>
 
-    <!-- trailer play button -->
+    <!-- כפתור PLAY -->
     <ImageView
-        android:id="@+id/playButton"
+        android:id="@+id/playButtonTr"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:contentDescription="Play trailer"
