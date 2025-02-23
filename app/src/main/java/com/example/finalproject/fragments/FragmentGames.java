@@ -1,5 +1,6 @@
 package com.example.finalproject.fragments;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,41 +10,42 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.finalproject.R;
 import com.example.finalproject.adapters.GameAdapter;
+import com.example.finalproject.api.RetrofitClient;
 import com.example.finalproject.models.Game;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.example.finalproject.models.GameResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.appcompat.widget.SearchView;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class FragmentGames extends Fragment {
     private RecyclerView recyclerView;
     private GameAdapter gameAdapter;
     private List<Game> gameList = new ArrayList<>();
     private List<Game> filteredList = new ArrayList<>();
-    private DatabaseReference databaseReference;
     private SearchView searchView;
 
     // ספינרים לסינון
     private Spinner yearSpinner, genreSpinner, publisherSpinner, seriesSpinner;
     private String selectedYear = "", selectedGenre = "", selectedPublisher = "", selectedSeries = "";
     private String searchText = "";
+    private static final String API_KEY = "41ce34c117204cf696fd040cc43dc20c"; // עדכני ל-API Key שלך
 
-    public FragmentGames() {
-        // Required empty public constructor
-    }
+    public FragmentGames() {}
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_games, container, false);
@@ -60,8 +62,8 @@ public class FragmentGames extends Fragment {
         gameAdapter = new GameAdapter(filteredList, getContext());
         recyclerView.setAdapter(gameAdapter);
 
-        // טעינת נתונים מ-Firebase
-        loadGamesFromFirebase();
+        // טעינת נתונים מה-API
+        loadGamesFromAPI();
 
         // חיפוש חופשי
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -116,27 +118,28 @@ public class FragmentGames extends Fragment {
         return view;
     }
 
-    // פונקציה לטעינת הנתונים מה-Firebase
-    private void loadGamesFromFirebase() {
-        databaseReference = FirebaseDatabase.getInstance().getReference("VideoGames");
-        databaseReference.addValueEventListener(new ValueEventListener() {
+    // פונקציה לטעינת הנתונים מה-RAWG API
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void loadGamesFromAPI() {
+        String dates = "2020-01-01," + java.time.LocalDate.now(); // כל המשחקים מ-2020 עד היום
+        String platforms = "4"; // 4 = PC
+
+        Call<GameResponse> call = RetrofitClient.getApiService().getGames(API_KEY, dates, platforms);
+        call.enqueue(new Callback<GameResponse>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                gameList.clear();
-                if (snapshot.exists()) { // בודק אם יש נתונים
-                    for (DataSnapshot gameSnapshot : snapshot.getChildren()) {
-                        Game game = gameSnapshot.getValue(Game.class);
-                        if (game != null) {
-                            gameList.add(game);
-                        }
-                    }
+            public void onResponse(@NonNull Call<GameResponse> call, @NonNull Response<GameResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    gameList.clear();
+                    gameList.addAll(response.body().getResults());
+                    applyFilters();
+                } else {
+                    Toast.makeText(getContext(), "Failed to load games", Toast.LENGTH_SHORT).show();
                 }
-                applyFilters(); // עדכון התצוגה לאחר טעינה
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Failed to load games: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            public void onFailure(@NonNull Call<GameResponse> call, @NonNull Throwable t) {
+                Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -146,15 +149,13 @@ public class FragmentGames extends Fragment {
         filteredList.clear();
 
         for (Game game : gameList) {
-            String gameYear = extractYear(game.getReleaseDate());
-
             boolean matchesSearch = searchText.isEmpty() || game.getTitle().toLowerCase().contains(searchText.toLowerCase());
-            boolean matchesYear = selectedYear.isEmpty() || gameYear.equals(selectedYear);
-            boolean matchesPublisher = selectedPublisher.isEmpty() || game.getPublisher().equalsIgnoreCase(selectedPublisher);
-            boolean matchesGenre = selectedGenre.isEmpty() || game.getGenre().equalsIgnoreCase(selectedGenre);
-            boolean matchesSeries = selectedSeries.isEmpty() || game.getSeriesName().equalsIgnoreCase(selectedSeries);
+            boolean matchesYear = selectedYear.isEmpty() || game.getReleaseDate().startsWith(selectedYear);
+            boolean matchesGenre = selectedGenre.isEmpty(); // RAWG API מחזיר ג'אנרים ברשימה, דורש טיפול אחר
+            boolean matchesPublisher = selectedPublisher.isEmpty(); // RAWG API לא מחזיר Publisher ישירות
+            boolean matchesSeries = selectedSeries.isEmpty(); // אין שדה ישיר לסדרות
 
-            if (matchesSearch && matchesYear && matchesPublisher && matchesGenre && matchesSeries) {
+            if (matchesSearch && matchesYear && matchesGenre && matchesPublisher && matchesSeries) {
                 filteredList.add(game);
             }
         }
@@ -177,12 +178,5 @@ public class FragmentGames extends Fragment {
     // ממשק לניהול בחירת פריטים בספינר
     interface SelectionListener {
         void onItemSelected(String value);
-    }
-
-    // פונקציה שמוציאה רק את השנה מהתאריך
-    private String extractYear(String date) {
-        if (date == null || date.isEmpty()) return "";
-        String[] parts = date.split(" ");
-        return (parts.length >= 3) ? parts[2] : "";
     }
 }

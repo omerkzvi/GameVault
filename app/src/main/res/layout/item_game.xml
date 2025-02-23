@@ -6,18 +6,29 @@
     android:layout_height="wrap_content"
     android:padding="10dp">
 
+    <!-- תמונת המשחק -->
+    <ImageView
+        android:id="@+id/gameImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="Game Image"
+        android:src="@drawable/ic_launcher_background"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
     <!-- תוכן המשחק -->
     <LinearLayout
         android:id="@+id/gameInfoLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingEnd="10dp"
-        android:layout_weight="1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/playButtonTr"
+        android:paddingStart="10dp"
+        app:layout_constraintStart_toEndOf="@id/gameImage"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <TextView
             android:id="@+id/gameTitle"
@@ -49,15 +60,4 @@
             android:textSize="16sp" />
     </LinearLayout>
 
-    <!-- כפתור PLAY -->
-    <ImageButton
-        android:id="@+id/playButtonTr"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:contentDescription="Play trailer"
-        android:padding="10dp"
-        android:src="@android:drawable/ic_media_play"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
