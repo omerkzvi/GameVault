@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView android:text="Filter by Year" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+    <Spinner android:id="@+id/yearSpinner" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+    <TextView android:text="Filter by Genre" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+    <Spinner android:id="@+id/genreSpinner" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+    <TextView android:text="Filter by Rating" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+    <Spinner android:id="@+id/ratingSpinner" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+    <TextView android:text="Filter by Publisher" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+    <Spinner android:id="@+id/publisherSpinner" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+</LinearLayout>

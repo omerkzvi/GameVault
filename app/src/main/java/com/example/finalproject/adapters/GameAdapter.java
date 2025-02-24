@@ -38,15 +38,15 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
         Game game = gameList.get(position);
 
         holder.gameTitle.setText(game.getTitle());
-        holder.gameGenre.setText(game.getGenre());
-        holder.gamePublisher.setText(game.getDeveloper());
-        holder.gameReleaseDate.setText(game.getReleaseDate());
+        holder.gameGenre.setText("Genre: " + game.getFirstGenre());
+        holder.gameRating.setText("Rating: " + game.getRating());
+        holder.gameReleaseDate.setText("Release Date: " + game.getReleaseDate());
 
-        // טעינת תמונת המשחק עם Glide
         Glide.with(context)
-                .load(game.getImageUrl()) // URL של התמונה מה-API
+                .load(game.getImageUrl())
                 .into(holder.gameImage);
     }
+
 
     @Override
     public int getItemCount() {
@@ -59,16 +59,16 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
     }
 
     public static class GameViewHolder extends RecyclerView.ViewHolder {
-        TextView gameTitle, gameGenre, gamePublisher, gameReleaseDate;
+        TextView gameTitle, gameGenre, gameRating, gameReleaseDate;
         ImageView gameImage;
 
         public GameViewHolder(@NonNull View itemView) {
             super(itemView);
             gameTitle = itemView.findViewById(R.id.gameTitle);
             gameGenre = itemView.findViewById(R.id.gameGenre);
-            gamePublisher = itemView.findViewById(R.id.gamePublisher);
+            gameRating = itemView.findViewById(R.id.gameRating);
             gameReleaseDate = itemView.findViewById(R.id.gameReleaseDate);
-            gameImage = itemView.findViewById(R.id.gameImage); // מקשרים לתמונה
+            gameImage = itemView.findViewById(R.id.gameImage);
         }
     }
 }
