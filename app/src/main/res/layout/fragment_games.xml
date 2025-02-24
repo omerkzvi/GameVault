@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,55 +9,27 @@
     android:background="#90FFFFFF"
     android:elevation="4dp">
 
-    <!-- Free Search -->
-<androidx.appcompat.widget.SearchView
-android:id="@+id/searchView"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:queryHint="Search games..." />
+    <!-- חיפוש חופשי -->
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:queryHint="Search games..." />
 
-    <!-- Filtering Options -->
-<TextView
-android:layout_width="wrap_content"
-android:layout_height="wrap_content"
-android:text="Filter by Year:" />
-<Spinner
-android:id="@+id/yearSpinner"
-android:layout_width="match_parent"
-android:layout_height="48dp" />
+    <!-- כפתור לפתיחת דיאלוג הסינון -->
+    <Button
+        android:id="@+id/filterButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Filter Options"
+        android:drawableStart="@drawable/ic_filter"
+        android:drawablePadding="8dp"/>
 
-<TextView
-android:layout_width="wrap_content"
-android:layout_height="wrap_content"
-android:text="Filter by Genre:" />
-<Spinner
-android:id="@+id/genreSpinner"
-android:layout_width="match_parent"
-android:layout_height="48dp" />
+    <!-- רשימת המשחקים -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp" />
 
-<TextView
-android:layout_width="wrap_content"
-android:layout_height="wrap_content"
-android:text="Filter by Publisher:" />
-<Spinner
-android:id="@+id/publisherSpinner"
-android:layout_width="match_parent"
-android:layout_height="48dp" />
-
-<TextView
-android:layout_width="wrap_content"
-android:layout_height="wrap_content"
-android:text="Filter by Series:" />
-<Spinner
-android:id="@+id/seriesSpinner"
-android:layout_width="match_parent"
-android:layout_height="48dp" />
-
-    <!-- RecyclerView -->
-<androidx.recyclerview.widget.RecyclerView
-android:id="@+id/recyclerView"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:padding="10dp" />
-
-    </LinearLayout>
+</LinearLayout>

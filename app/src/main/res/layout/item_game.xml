@@ -16,7 +16,8 @@
         android:src="@drawable/ic_launcher_background"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1" />
 
     <!-- Game content -->
     <LinearLayout
@@ -36,6 +37,7 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:textColor="@android:color/black"
             android:text="Game Title" />
 
         <TextView
@@ -43,21 +45,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Genre"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="@android:color/darker_gray" />
 
         <TextView
-            android:id="@+id/gamePublisher"
+            android:id="@+id/gameRating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Publisher"
-            android:textSize="16sp" />
+            android:text="Rating"
+            android:textSize="16sp"
+            android:textColor="@android:color/darker_gray" />
 
         <TextView
             android:id="@+id/gameReleaseDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Release Date"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="@android:color/darker_gray" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
