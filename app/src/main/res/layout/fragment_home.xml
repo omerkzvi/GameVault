@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".fragments.FragmentHome">
 
-    <!-- מסגרת כהה חצי-שקופה לטופס -->
     <LinearLayout
         android:layout_width="392dp"
         android:layout_height="wrap_content"
@@ -13,7 +12,7 @@
         android:layout_marginTop="80dp"
         android:background="@drawable/form_background"
         android:orientation="vertical"
-        android:padding="24dp"> <!-- רקע כהה חצי-שקוף -->
+        android:padding="24dp">
 
         <!-- Email Input -->
         <EditText

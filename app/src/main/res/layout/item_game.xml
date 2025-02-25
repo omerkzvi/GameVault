@@ -19,7 +19,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1" />
 
-    <!-- תוכן המשחק -->
+    <!-- Game content -->
     <LinearLayout
         android:id="@+id/gameInfoLayout"
         android:layout_width="0dp"
