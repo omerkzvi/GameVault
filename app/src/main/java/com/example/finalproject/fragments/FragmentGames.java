@@ -112,11 +112,20 @@ public class FragmentGames extends Fragment {
             selectedGenre = getSelectedSpinnerValue(genreSpinner);
             selectedPublisher = getSelectedSpinnerValue(publisherSpinner);
 
-            String selectedRating = getSelectedSpinnerValue(ratingSpinner);
-            if (!selectedRating.equals("All")) {
-                String[] ratingRange = selectedRating.split("-");
-                minRating = Double.parseDouble(ratingRange[0]);
-                maxRating = Double.parseDouble(ratingRange[1]);
+            selectedRating = getSelectedSpinnerValue(ratingSpinner);
+
+            if (!selectedRating.isEmpty()) {
+                try {
+                    String[] ratingRange = selectedRating.split("-");
+                    if (ratingRange.length == 2) {
+                        minRating = Double.parseDouble(ratingRange[0]);
+                        maxRating = Double.parseDouble(ratingRange[1]);
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(getContext(), "Invalid rating selection", Toast.LENGTH_SHORT).show();
+                    minRating = 0;
+                    maxRating = 5;
+                }
             } else {
                 minRating = 0;
                 maxRating = 5;
@@ -124,6 +133,7 @@ public class FragmentGames extends Fragment {
 
             applyFilters();
         });
+
 
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
 
@@ -172,35 +182,27 @@ public class FragmentGames extends Fragment {
         filteredList.clear();
 
         for (Game game : gameList) {
-            // בדיקה אם שם המשחק תואם לחיפוש
             boolean matchesSearch = searchText.isEmpty() ||
                     (game.getTitle() != null && game.getTitle().toLowerCase().contains(searchText.toLowerCase()));
 
-            // בדיקה אם שנת ההוצאה תואמת לסינון
             boolean matchesYear = selectedYear.isEmpty() ||
                     (game.getReleaseDate() != null && game.getReleaseDate().startsWith(selectedYear));
 
-            // בדיקה אם הז'אנר תואם לרשימת הז'אנרים של המשחק
             boolean matchesGenre = selectedGenre.isEmpty() ||
                     (game.getGenres() != null && !game.getGenres().isEmpty() &&
                             game.getGenres().stream().anyMatch(genre -> genre.getName().equalsIgnoreCase(selectedGenre)));
 
-            // בדיקה אם המוציא לאור תואם
             boolean matchesPublisher = selectedPublisher.isEmpty() ||
                     (game.getDeveloper() != null && game.getDeveloper().equalsIgnoreCase(selectedPublisher));
 
-            // בדיקה אם הדירוג נמצא בטווח שנבחר (לדוגמה 2-3, 3-4 וכו')
-            boolean matchesRating = selectedRating.isEmpty() || (
-                    game.getRating() >= minRating &&
-                            game.getRating() <= maxRating
-            );
-            // הוספת המשחק לרשימה הסופית אם הוא עומד בכל הקריטריונים
+            boolean matchesRating = game.getRating() >= minRating && game.getRating() <= maxRating;
+
             if (matchesSearch && matchesYear && matchesGenre && matchesPublisher && matchesRating) {
                 filteredList.add(game);
             }
         }
+
         // עדכון הרשימה בתצוגת ה-RecyclerView
         gameAdapter.updateList(filteredList);
     }
-
 }
