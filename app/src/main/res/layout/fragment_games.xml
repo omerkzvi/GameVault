@@ -9,14 +9,14 @@
     android:background="#90FFFFFF"
     android:elevation="4dp">
 
-    <!-- חיפוש חופשי -->
+    <!-- free search bar -->
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:queryHint="Search games..." />
 
-    <!-- כפתור לפתיחת דיאלוג הסינון -->
+    <!-- Button to open filter dialog -->
     <Button
         android:id="@+id/filterButton"
         android:layout_width="match_parent"
@@ -25,7 +25,7 @@
         android:drawableStart="@drawable/ic_filter"
         android:drawablePadding="8dp"/>
 
-    <!-- רשימת המשחקים -->
+    <!-- RecyclerView to display the list of games -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"

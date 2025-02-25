@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:padding="10dp">
 
-    <!-- תמונת המשחק -->
+    <!-- game image -->
     <ImageView
         android:id="@+id/gameImage"
         android:layout_width="100dp"
@@ -46,7 +46,10 @@
             android:layout_height="wrap_content"
             android:text="Genre"
             android:textSize="16sp"
-            android:textColor="@android:color/darker_gray" />
+            android:background="@android:color/white"
+            android:padding="4dp"
+            android:alpha="0.7"
+            android:textColor="@android:color/black" />
 
         <TextView
             android:id="@+id/gameRating"
@@ -54,7 +57,10 @@
             android:layout_height="wrap_content"
             android:text="Rating"
             android:textSize="16sp"
-            android:textColor="@android:color/darker_gray" />
+            android:background="@android:color/white"
+            android:padding="4dp"
+            android:alpha="0.7"
+            android:textColor="@android:color/black" />
 
         <TextView
             android:id="@+id/gameReleaseDate"
@@ -62,7 +68,10 @@
             android:layout_height="wrap_content"
             android:text="Release Date"
             android:textSize="16sp"
-            android:textColor="@android:color/darker_gray" />
+            android:background="@android:color/white"
+            android:padding="4dp"
+            android:alpha="0.7"
+            android:textColor="@android:color/black"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -71,6 +71,7 @@ public class FragmentHome extends Fragment {
             @Override
             public void onClick(View view) {
 
+                // navigate to the Register fragment when the button is clicked
                 Navigation.findNavController(view).navigate(R.id.action_fragmentHome_to_fragmentRegister);
             }
         });

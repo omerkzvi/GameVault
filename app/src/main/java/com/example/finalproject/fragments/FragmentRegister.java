@@ -30,6 +30,9 @@ import com.google.firebase.database.ValueEventListener;
  * Use the {@link FragmentRegister#newInstance} factory method to
  * create an instance of this fragment.
  */
+
+// fragment for registering a new user
+
 public class FragmentRegister extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
@@ -82,6 +85,7 @@ public class FragmentRegister extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_register, container, false);
 
+        // get references to UI elements
         Button button1 = view.findViewById(R.id.registrationButton);
         EditText firstEmailEditText = view.findViewById(R.id.enterEmailReg);
         EditText passwordEditText = view.findViewById(R.id.enterPasswordReg);
@@ -94,28 +98,31 @@ public class FragmentRegister extends Fragment {
             @Override
             public void onClick(View view) {
 
+                // retrieve the input values
                 String firstEmail = firstEmailEditText.getText().toString().trim();
                 String firstPassword = passwordEditText.getText().toString().trim();
                 String userName = userNameEditText.getText().toString().trim();
                 String phone = phoneEditText.getText().toString().trim();
 
-                // Validation
+                // validation: Check if any field is empty
                 if (firstEmail.isEmpty() || firstPassword.isEmpty() || userName.isEmpty() || phone.isEmpty()) {
                     Toast.makeText(getContext(), "Please fill all fields", Toast.LENGTH_LONG).show();
                     return;
                 }
 
+                // get a reference to the Firebase Realtime Database
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference("users").child(userName);
 
+                // check if the username already exists in the database
                 myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.exists()) {
-                            // Username is taken
+                            // username is taken
                             Toast.makeText(getContext(), "Username is already taken, please choose another", Toast.LENGTH_LONG).show();
                         } else {
-                            // Username is available, proceed with registration
+                            // username is available, proceed with registration
                             mAuth.createUserWithEmailAndPassword(firstEmail, firstPassword)
                                     .addOnCompleteListener(requireActivity(), new OnCompleteListener<AuthResult>() {
                                         @Override

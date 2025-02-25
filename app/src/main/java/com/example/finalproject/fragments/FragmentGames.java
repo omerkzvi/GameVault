@@ -34,16 +34,16 @@ import retrofit2.Response;
 public class FragmentGames extends Fragment {
     private RecyclerView recyclerView;
     private GameAdapter gameAdapter;
-    private List<Game> gameList = new ArrayList<>();
-    private List<Game> filteredList = new ArrayList<>();
+    private List<Game> gameList = new ArrayList<>(); // list to hold all games
+    private List<Game> filteredList = new ArrayList<>(); // list to hold filtered games
     private SearchView searchView;
     private Button filterButton;
 
-    // משתנים לסינון
+    // variables for filter parameters
     private String selectedYear = "", selectedGenre = "", selectedPublisher = "", selectedRating = "";
     private double minRating = 0, maxRating = 5;
     private String searchText = "";
-    private static final String API_KEY = "41ce34c117204cf696fd040cc43dc20c"; // API Key שלך
+    private static final String API_KEY = "41ce34c117204cf696fd040cc43dc20c"; // API Key
 
     public FragmentGames() {}
 
@@ -52,68 +52,70 @@ public class FragmentGames extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_games, container, false);
 
-        // קישור לאלמנטים ב-XML
+        // linking UI elements from XML
         recyclerView = view.findViewById(R.id.recyclerView);
         searchView = view.findViewById(R.id.searchView);
         filterButton = view.findViewById(R.id.filterButton);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        gameAdapter = new GameAdapter(filteredList, getContext());
-        recyclerView.setAdapter(gameAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext())); // setting the RecyclerView layout
+        gameAdapter = new GameAdapter(filteredList, getContext()); // initializing the adapter with filtered games
+        recyclerView.setAdapter(gameAdapter); // setting the adapter for RecyclerView
 
-        // טעינת נתונים מה-API
+        // load games from the API
         loadGamesFromAPI();
 
-        // חיפוש חופשי
+        // handling free text search
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                searchText = query;
-                applyFilters();
+                searchText = query; // storing search query
+                applyFilters(); // applying filters after search
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                searchText = newText;
-                applyFilters();
+                searchText = newText; // updating search query
+                applyFilters(); // applying filters after text change
                 return false;
             }
         });
 
-        // כפתור סינון
+        // Filter button listener to show filter options
         filterButton.setOnClickListener(v -> showFilterDialog());
 
         return view;
     }
 
-    // פונקציה לפתיחת חלון הסינון
+    // function to show the filter dialog with filter options
     private void showFilterDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Select Filters");
 
-        // יצירת Layout דינמי לדיאלוג
+        // dynamically creating the layout for the dialog
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_filter, null);
         builder.setView(dialogView);
 
+        // creating spinners for year, genre, rating, publisher filters
         final Spinner yearSpinner = dialogView.findViewById(R.id.yearSpinner);
         final Spinner genreSpinner = dialogView.findViewById(R.id.genreSpinner);
         final Spinner ratingSpinner = dialogView.findViewById(R.id.ratingSpinner);
         final Spinner publisherSpinner = dialogView.findViewById(R.id.publisherSpinner);
 
-        // הגדרת ערכים לכל Spinner
+        // setting values for each spinner
         setUpSpinner(yearSpinner, new String[]{"All", "2024", "2023", "2022", "2021", "2020"});
         setUpSpinner(genreSpinner, new String[]{"All", "Action", "RPG", "Shooter", "Adventure", "Strategy"});
         setUpSpinner(ratingSpinner, new String[]{"All", "0-1", "1-2", "2-3", "3-4", "4-5"});
         setUpSpinner(publisherSpinner, new String[]{"All", "Ubisoft", "Electronic Arts", "Activision", "Rockstar Games"});
 
+        // when the apply button is clicked, apply selected filters
         builder.setPositiveButton("Apply", (dialog, which) -> {
-            selectedYear = getSelectedSpinnerValue(yearSpinner);
-            selectedGenre = getSelectedSpinnerValue(genreSpinner);
-            selectedPublisher = getSelectedSpinnerValue(publisherSpinner);
+            selectedYear = getSelectedSpinnerValue(yearSpinner); // get selected year
+            selectedGenre = getSelectedSpinnerValue(genreSpinner); // get selected genre
+            selectedPublisher = getSelectedSpinnerValue(publisherSpinner); // get selected publisher
+            selectedRating = getSelectedSpinnerValue(ratingSpinner); // get selected rating range
 
-            selectedRating = getSelectedSpinnerValue(ratingSpinner);
-
+            // parsing rating range if exists
             if (!selectedRating.isEmpty()) {
                 try {
                     String[] ratingRange = selectedRating.split("-");
@@ -131,40 +133,42 @@ public class FragmentGames extends Fragment {
                 maxRating = 5;
             }
 
+            // apply filters based on selected values
             applyFilters();
         });
 
-
+        // if cancel is clicked, dismiss the dialog
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
 
         builder.show();
     }
 
-    // פונקציה כללית לטיפול בהגדרת ספינר
+    // function to set up spinner with values
     private void setUpSpinner(Spinner spinner, String[] values) {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, values);
         spinner.setAdapter(adapter);
     }
 
-    // מחזיר את הערך שנבחר בספינר
+    // returns the selected value from the spinner, returns "" if "All" is selected
     private String getSelectedSpinnerValue(Spinner spinner) {
         String value = spinner.getSelectedItem().toString();
         return value.equals("All") ? "" : value;
     }
 
-    // פונקציה לטעינת הנתונים מה-RAWG API
+    // function to load games from the RAWG API
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void loadGamesFromAPI() {
-        String dates = "2020-01-01," + java.time.LocalDate.now(); // כל המשחקים מ-2020 עד היום
+        String dates = "2020-01-01," + java.time.LocalDate.now(); // from 2020 to now
 
+        // making a request to the API
         Call<GameResponse> call = RetrofitClient.getApiService().getGames(API_KEY, dates, null); // אין סינון פלטפורמות
         call.enqueue(new Callback<GameResponse>() {
             @Override
             public void onResponse(@NonNull Call<GameResponse> call, @NonNull Response<GameResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    gameList.clear();
-                    gameList.addAll(response.body().getResults());
-                    applyFilters();
+                    gameList.clear(); // clear previous data
+                    gameList.addAll(response.body().getResults()); // add new data from API
+                    applyFilters(); // apply filters after loading data
                 } else {
                     Toast.makeText(getContext(), "Failed to load games", Toast.LENGTH_SHORT).show();
                 }
@@ -177,11 +181,13 @@ public class FragmentGames extends Fragment {
         });
     }
 
-    // מסנן את הרשימה לפי שם המשחק וגם לפי הפילטרים שנבחרו
+    // function to apply filters based on search and selected filters
     private void applyFilters() {
-        filteredList.clear();
+        filteredList.clear(); // clear previous filtered data
+
 
         for (Game game : gameList) {
+            // check if the game matches the search and filter criteria
             boolean matchesSearch = searchText.isEmpty() ||
                     (game.getTitle() != null && game.getTitle().toLowerCase().contains(searchText.toLowerCase()));
 
@@ -197,12 +203,13 @@ public class FragmentGames extends Fragment {
 
             boolean matchesRating = game.getRating() >= minRating && game.getRating() <= maxRating;
 
+            // if all conditions are met, add the game to filtered list
             if (matchesSearch && matchesYear && matchesGenre && matchesPublisher && matchesRating) {
                 filteredList.add(game);
             }
         }
 
-        // עדכון הרשימה בתצוגת ה-RecyclerView
+        // update the RecyclerView with the filtered list
         gameAdapter.updateList(filteredList);
     }
 }
