@@ -1,6 +1,7 @@
 package com.example.finalproject.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,16 +38,32 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
     public void onBindViewHolder(@NonNull GameViewHolder holder, int position) {
         Game game = gameList.get(position);
 
+        // שם המשחק (תמיד קיים)
         holder.gameTitle.setText(game.getTitle());
-        holder.gameGenre.setText("Genre: " + game.getFirstGenre());
-        holder.gameRating.setText("Rating: " + game.getRating());
-        holder.gameReleaseDate.setText("Release Date: " + game.getReleaseDate());
 
-        Glide.with(context)
-                .load(game.getImageUrl())
-                .into(holder.gameImage);
+        // ז'אנר - אם אין ז'אנר, יציג "Unknown Genre"
+        String genre = (game.getFirstGenre() != null && !game.getFirstGenre().isEmpty()) ? game.getFirstGenre() : "Unknown Genre";
+        holder.gameGenre.setText("Genre: " + genre);
+
+        // דירוג - אם אין דירוג, יציג "Unknown"
+        String rating = (game.getRating() > 0) ? String.valueOf(game.getRating()) : "Unknown Rating";
+        holder.gameRating.setText("Rating: " + rating);
+
+        // תאריך יציאה - אם אין תאריך, יציג "Unknown"
+        String releaseDate = (game.getReleaseDate() != null && !game.getReleaseDate().isEmpty()) ? game.getReleaseDate() : "Unknown Release Date ";
+        holder.gameReleaseDate.setText("Release Date: " + releaseDate);
+
+        // טעינת תמונת המשחק עם Glide
+        if (game.getImageUrl() != null && !game.getImageUrl().isEmpty()) {
+            Glide.with(context)
+                    .load(game.getImageUrl())
+                    .placeholder(R.drawable.ic_launcher_background) // תמונה זמנית בזמן טעינה
+                    .error(R.drawable.ic_launcher_background) // תמונה במקרה של שגיאה
+                    .into(holder.gameImage);
+        } else {
+            holder.gameImage.setImageResource(R.drawable.ic_launcher_background);
+        }
     }
-
 
     @Override
     public int getItemCount() {
