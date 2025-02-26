@@ -7,89 +7,90 @@ import java.util.stream.Collectors;
 
 public class Game {
     @SerializedName("name")
-    private String title; // שם המשחק
+    private String title;  // the title of the game
 
     @SerializedName("released")
-    private String releaseDate; // תאריך יציאה
+    private String releaseDate; // release date of the game
 
     @SerializedName("background_image")
-    private String imageUrl; // תמונת המשחק
+    private String imageUrl; // URL of the game's image
 
     @SerializedName("description_raw")
-    private String description; // תיאור המשחק
+    private String description; // description of the game
 
     @SerializedName("genres")
-    private List<Genre> genres; // רשימת ז'אנרים
+    private List<Genre> genres; // list of game genres
+
 
     @SerializedName("publishers")
-    private List<Publisher> publishers; // רשימת מפרסמים
+    private List<Publisher> publishers; // list of publishers of the game
 
     @SerializedName("rating")
-    private double rating; // דירוג המשחק
+    private double rating; // rating of the game
 
     @SerializedName("trailer")
-    private String trailerLink; // קישור לטריילר
+    private String trailerLink; // URL link to the game's trailer
 
-    // קונסטרקטור ריק (דרוש ל-Retrofit)
+    // empty constructor required by Retrofit
     public Game() {}
 
-    // Getters עם בדיקות ל-null
+    // getters with null checks and default values
     public String getTitle() {
-        return title != null ? title : "Unknown Title";
+        return title != null ? title : "Unknown Title"; // return "Unknown Title" if title is null
     }
 
     public String getReleaseDate() {
-        return releaseDate != null ? releaseDate : "Unknown Date";
+        return releaseDate != null ? releaseDate : "Unknown Date";// return "Unknown Date" if releaseDate is null
     }
 
     public String getImageUrl() {
-        return imageUrl != null ? imageUrl : "";
+        return imageUrl != null ? imageUrl : "";// return an empty string if imageUrl is null
     }
 
     public String getDescription() {
-        return description != null && !description.isEmpty() ? description : "No description available.";
+        return description != null && !description.isEmpty() ? description : "No description available."; // Return default if description is null or empty
     }
 
     public double getRating() {
-        return Double.isNaN(rating) ? 0.0 : rating;
+        return Double.isNaN(rating) ? 0.0 : rating;// return 0.0 if rating is NaN
     }
 
 
-    // מחזיר את שם הז'אנר הראשון, או "Unknown" אם אין נתון
+    // returns the name of the first genre, or "Unknown Genre" if none is available
     public String getFirstGenre() {
         return (genres != null && !genres.isEmpty() && genres.get(0).getName() != null)
                 ? genres.get(0).getName()
                 : "Unknown Genre";
     }
 
-    // מחזיר את שם המפרסם הראשון, או "Unknown Publisher" אם אין
+    // returns the name of the first publisher, or "Unknown Publisher" if none is available
     public String getPublisher() {
         return (publishers != null && !publishers.isEmpty() && publishers.get(0).getName() != null)
                 ? publishers.get(0).getName()
                 : "Unknown Publisher";
     }
 
-    // מחזיר רשימה של כל הז'אנרים כטקסט מופרד בפסיקים
+    // returns the list of all genres or an empty list if none exists
     public List<Genre> getGenres() {
         return genres != null ? genres : new ArrayList<>();
     }
 
 
-    // מחזיר רשימה של כל המפרסמים כטקסט מופרד בפסיקים
+    // returns a comma-separated list of all publishers, or "Unknown Publisher" if none
     public String getPublishersList() {
         return (publishers != null && !publishers.isEmpty())
                 ? publishers.stream().map(Publisher::getName).collect(Collectors.joining(", "))
                 : "Unknown Publisher";
     }
 
-    // Getter לקישור לטריילר (אם לא קיים, מחזיר חיפוש ביוטיוב)
+    // getter for the trailer link; if not available, returns a YouTube search link for the game trailer
     public String getTrailerLink() {
         return (trailerLink != null && !trailerLink.isEmpty())
                 ? trailerLink
                 : "https://www.youtube.com/results?search_query=" + title.replace(" ", "+") + "+game+trailer";
     }
 
-    // מחלקות פנימיות לטיפול בז'אנרים, מפתחים ומפרסמים
+    // inner classes to handle Genre and Publisher
     public static class Genre {
         @SerializedName("name")
         private String name;

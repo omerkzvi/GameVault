@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder> {
-    private List<Game> gameList;
-    private Context context;
+    private List<Game> gameList; // list to hold game data
+    private Context context; // context to access resources and start new activities
 
     // Constructor
     public GameAdapter(List<Game> gameList, Context context) {
@@ -26,6 +26,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
         this.context = context;
     }
 
+    // called when a new ViewHolder is created. It inflates the layout for each item in the RecyclerView.
     @NonNull
     @Override
     public GameViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -33,11 +34,12 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
         return new GameViewHolder(view);
     }
 
+    // called to bind data to the ViewHolder for each item
     @Override
     public void onBindViewHolder(@NonNull GameViewHolder holder, int position) {
         Game game = gameList.get(position);
 
-        // הצגת מידע בסיסי
+        // display basic game information in respective TextViews
         holder.gameTitle.setText(game.getTitle());
         holder.gameGenre.setText("Genre: " + game.getFirstGenre());
         holder.gameRating.setText("Rating: " + (game.getRating() > 0 ? String.valueOf(game.getRating()) : "Unknown Rating"));
@@ -45,47 +47,51 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
         holder.gamePublisher.setText("Publisher: " + game.getPublisher());
         holder.gameDescription.setText(game.getDescription());
 
-        // טעינת תמונה
+        // load game image using Glide library with a placeholder and error image
         Glide.with(context)
                 .load(game.getImageUrl())
                 .placeholder(R.drawable.ic_launcher_background)
                 .error(R.drawable.ic_launcher_background)
                 .into(holder.gameImage);
 
-        // לחיצה על כל הכרטיס תפתח/תסגור את הפרטים הנוספים
+        // toggle visibility of additional game details when clicking on the item view
         holder.itemView.setOnClickListener(v -> {
             if (holder.expandableView.getVisibility() == View.VISIBLE) {
-                holder.expandableView.setVisibility(View.GONE);
+                holder.expandableView.setVisibility(View.GONE); // hide additional details
             } else {
-                holder.expandableView.setVisibility(View.VISIBLE);
+                holder.expandableView.setVisibility(View.VISIBLE); // show additional details
             }
         });
 
-        // פתיחת הטריילר בלחיצה
+        // open game trailer in browser when clicking on the trailer link
         holder.gameTrailerLink.setOnClickListener(v -> {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(game.getTrailerLink()));
-            context.startActivity(browserIntent);
+            context.startActivity(browserIntent); // launch browser to open trailer link
         });
     }
 
-
+    // return the total number of items in the list
     @Override
     public int getItemCount() {
         return gameList.size();
     }
 
+    // method to update the list of games and notify the adapter to refresh the view
     public void updateList(List<Game> newList) {
         gameList = new ArrayList<>(newList);
         notifyDataSetChanged();
     }
 
+    // ViewHolder class that holds references to the views in each item layout
     public static class GameViewHolder extends RecyclerView.ViewHolder {
         TextView gameTitle, gameGenre, gameRating, gameReleaseDate, gamePublisher, gameDescription, gameTrailerLink;
         ImageView gameImage;
-        View expandableView;
+        View expandableView; // view containing additional details that can be expanded or collapsed
+
 
         public GameViewHolder(@NonNull View itemView) {
             super(itemView);
+            // initialize the views in the item layout
             gameTitle = itemView.findViewById(R.id.gameTitle);
             gameGenre = itemView.findViewById(R.id.gameGenre);
             gameRating = itemView.findViewById(R.id.gameRating);
