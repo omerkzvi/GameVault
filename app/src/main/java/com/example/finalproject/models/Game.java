@@ -18,14 +18,17 @@ public class Game {
     @SerializedName("description_raw")
     private String description; // תיאור המשחק
 
-    @SerializedName("developers")
-    private List<Developer> developers; // רשימת מפתחים
-
     @SerializedName("genres")
     private List<Genre> genres; // רשימת ז'אנרים
 
+    @SerializedName("publishers")
+    private List<Publisher> publishers; // רשימת מפרסמים
+
     @SerializedName("rating")
     private double rating; // דירוג המשחק
+
+    @SerializedName("trailer")
+    private String trailerLink; // קישור לטריילר
 
     // קונסטרקטור ריק (דרוש ל-Retrofit)
     public Game() {}
@@ -51,18 +54,19 @@ public class Game {
         return Double.isNaN(rating) ? 0.0 : rating;
     }
 
-    // מחזיר את שם המפתח הראשון, או "Unknown" אם אין נתון
-    public String getDeveloper() {
-        return (developers != null && !developers.isEmpty() && developers.get(0).getName() != null)
-                ? developers.get(0).getName()
-                : "Unknown";
-    }
 
     // מחזיר את שם הז'אנר הראשון, או "Unknown" אם אין נתון
     public String getFirstGenre() {
         return (genres != null && !genres.isEmpty() && genres.get(0).getName() != null)
                 ? genres.get(0).getName()
-                : "Unknown";
+                : "Unknown Genre";
+    }
+
+    // מחזיר את שם המפרסם הראשון, או "Unknown Publisher" אם אין
+    public String getPublisher() {
+        return (publishers != null && !publishers.isEmpty() && publishers.get(0).getName() != null)
+                ? publishers.get(0).getName()
+                : "Unknown Publisher";
     }
 
     // מחזיר רשימה של כל הז'אנרים כטקסט מופרד בפסיקים
@@ -71,14 +75,21 @@ public class Game {
     }
 
 
-    // מחזיר רשימה של כל המפתחים כטקסט מופרד בפסיקים
-    public String getNames() {
-        return (developers != null && !developers.isEmpty())
-                ? developers.stream().map(Developer::getName).collect(Collectors.joining(", "))
-                : "Unknown";
+    // מחזיר רשימה של כל המפרסמים כטקסט מופרד בפסיקים
+    public String getPublishersList() {
+        return (publishers != null && !publishers.isEmpty())
+                ? publishers.stream().map(Publisher::getName).collect(Collectors.joining(", "))
+                : "Unknown Publisher";
     }
 
-    // מחלקות פנימיות לטיפול בז'אנרים ומפתחים
+    // Getter לקישור לטריילר (אם לא קיים, מחזיר חיפוש ביוטיוב)
+    public String getTrailerLink() {
+        return (trailerLink != null && !trailerLink.isEmpty())
+                ? trailerLink
+                : "https://www.youtube.com/results?search_query=" + title.replace(" ", "+") + "+game+trailer";
+    }
+
+    // מחלקות פנימיות לטיפול בז'אנרים, מפתחים ומפרסמים
     public static class Genre {
         @SerializedName("name")
         private String name;
@@ -88,7 +99,7 @@ public class Game {
         }
     }
 
-    public static class Developer {
+    public static class Publisher {
         @SerializedName("name")
         private String name;
 

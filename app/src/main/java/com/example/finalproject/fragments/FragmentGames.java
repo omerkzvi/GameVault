@@ -24,7 +24,9 @@ import com.example.finalproject.models.Game;
 import com.example.finalproject.models.GameResponse;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import androidx.appcompat.widget.SearchView;
 import retrofit2.Call;
@@ -106,7 +108,17 @@ public class FragmentGames extends Fragment {
         setUpSpinner(yearSpinner, new String[]{"All", "2024", "2023", "2022", "2021", "2020"});
         setUpSpinner(genreSpinner, new String[]{"All", "Action", "RPG", "Shooter", "Adventure", "Strategy"});
         setUpSpinner(ratingSpinner, new String[]{"All", "0-1", "1-2", "2-3", "3-4", "4-5"});
-        setUpSpinner(publisherSpinner, new String[]{"All", "Ubisoft", "Electronic Arts", "Activision", "Rockstar Games"});
+
+        // dynamically populate publishers from the API data
+        Set<String> publisherOptions = new HashSet<>();
+        publisherOptions.add("All");
+        for (Game game : gameList) {
+            String publisher = game.getPublisher();
+            if (publisher != null && !publisherOptions.contains(publisher)) {
+                publisherOptions.add(publisher);
+            }
+        }
+        setUpSpinner(publisherSpinner, publisherOptions.toArray(new String[0]));
 
         // when the apply button is clicked, apply selected filters
         builder.setPositiveButton("Apply", (dialog, which) -> {
@@ -160,14 +172,13 @@ public class FragmentGames extends Fragment {
     private void loadGamesFromAPI() {
         String dates = "2020-01-01," + java.time.LocalDate.now(); // from 2020 to now
 
-        // making a request to the API
-        Call<GameResponse> call = RetrofitClient.getApiService().getGames(API_KEY, dates, null); // אין סינון פלטפורמות
+        Call<GameResponse> call = RetrofitClient.getApiService().getGames(API_KEY, dates, null);
         call.enqueue(new Callback<GameResponse>() {
             @Override
             public void onResponse(@NonNull Call<GameResponse> call, @NonNull Response<GameResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    gameList.clear(); // clear previous data
-                    gameList.addAll(response.body().getResults()); // add new data from API
+                    gameList.clear();
+                    gameList.addAll(response.body().getResults());
                     applyFilters(); // apply filters after loading data
                 } else {
                     Toast.makeText(getContext(), "Failed to load games", Toast.LENGTH_SHORT).show();
@@ -183,33 +194,20 @@ public class FragmentGames extends Fragment {
 
     // function to apply filters based on search and selected filters
     private void applyFilters() {
-        filteredList.clear(); // clear previous filtered data
-
+        filteredList.clear();
 
         for (Game game : gameList) {
-            // check if the game matches the search and filter criteria
-            boolean matchesSearch = searchText.isEmpty() ||
-                    (game.getTitle() != null && game.getTitle().toLowerCase().contains(searchText.toLowerCase()));
-
-            boolean matchesYear = selectedYear.isEmpty() ||
-                    (game.getReleaseDate() != null && game.getReleaseDate().startsWith(selectedYear));
-
-            boolean matchesGenre = selectedGenre.isEmpty() ||
-                    (game.getGenres() != null && !game.getGenres().isEmpty() &&
-                            game.getGenres().stream().anyMatch(genre -> genre.getName().equalsIgnoreCase(selectedGenre)));
-
-            boolean matchesPublisher = selectedPublisher.isEmpty() ||
-                    (game.getDeveloper() != null && game.getDeveloper().equalsIgnoreCase(selectedPublisher));
-
+            boolean matchesSearch = searchText.isEmpty() || (game.getTitle() != null && game.getTitle().toLowerCase().contains(searchText.toLowerCase()));
+            boolean matchesYear = selectedYear.isEmpty() || (game.getReleaseDate() != null && game.getReleaseDate().startsWith(selectedYear));
+            boolean matchesGenre = selectedGenre.isEmpty() || game.getFirstGenre().equalsIgnoreCase(selectedGenre);
+            boolean matchesPublisher = selectedPublisher.isEmpty() || game.getPublisher().equalsIgnoreCase(selectedPublisher);
             boolean matchesRating = game.getRating() >= minRating && game.getRating() <= maxRating;
 
-            // if all conditions are met, add the game to filtered list
             if (matchesSearch && matchesYear && matchesGenre && matchesPublisher && matchesRating) {
                 filteredList.add(game);
             }
         }
 
-        // update the RecyclerView with the filtered list
         gameAdapter.updateList(filteredList);
     }
 }

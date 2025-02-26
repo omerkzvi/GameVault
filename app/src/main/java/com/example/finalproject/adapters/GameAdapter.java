@@ -1,20 +1,18 @@
 package com.example.finalproject.adapters;
 
 import android.content.Context;
-import android.util.Log;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.example.finalproject.R;
 import com.example.finalproject.models.Game;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +20,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
     private List<Game> gameList;
     private Context context;
 
-
-    // constructor for the GameAdapter class
+    // Constructor
     public GameAdapter(List<Game> gameList, Context context) {
         this.gameList = gameList;
         this.context = context;
@@ -40,57 +37,65 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
     public void onBindViewHolder(@NonNull GameViewHolder holder, int position) {
         Game game = gameList.get(position);
 
-        // set the game title (always available)
+        // הצגת מידע בסיסי
         holder.gameTitle.setText(game.getTitle());
+        holder.gameGenre.setText("Genre: " + game.getFirstGenre());
+        holder.gameRating.setText("Rating: " + (game.getRating() > 0 ? String.valueOf(game.getRating()) : "Unknown Rating"));
+        holder.gameReleaseDate.setText("Release Date: " + game.getReleaseDate());
+        holder.gamePublisher.setText("Publisher: " + game.getPublisher());
+        holder.gameDescription.setText(game.getDescription());
 
-        // set the genre - if unavailable, display "Unknown Genre"
-        String genre = (game.getFirstGenre() != null && !game.getFirstGenre().isEmpty()) ? game.getFirstGenre() : "Unknown Genre";
-        holder.gameGenre.setText("Genre: " + genre);
+        // טעינת תמונה
+        Glide.with(context)
+                .load(game.getImageUrl())
+                .placeholder(R.drawable.ic_launcher_background)
+                .error(R.drawable.ic_launcher_background)
+                .into(holder.gameImage);
 
-        // set the rating - if unavailable, display "Unknown Rating"
-        String rating = (game.getRating() > 0) ? String.valueOf(game.getRating()) : "Unknown Rating";
-        holder.gameRating.setText("Rating: " + rating);
+        // לחיצה על כל הכרטיס תפתח/תסגור את הפרטים הנוספים
+        holder.itemView.setOnClickListener(v -> {
+            if (holder.expandableView.getVisibility() == View.VISIBLE) {
+                holder.expandableView.setVisibility(View.GONE);
+            } else {
+                holder.expandableView.setVisibility(View.VISIBLE);
+            }
+        });
 
-        // set the release date - if unavailable, display "Unknown"
-        String releaseDate = (game.getReleaseDate() != null && !game.getReleaseDate().isEmpty()) ? game.getReleaseDate() : "Unknown Release Date ";
-        holder.gameReleaseDate.setText("Release Date: " + releaseDate);
-
-        // load the game image using Glide (with a placeholder and error image)
-        if (game.getImageUrl() != null && !game.getImageUrl().isEmpty()) {
-            Glide.with(context)
-                    .load(game.getImageUrl())
-                    .placeholder(R.drawable.ic_launcher_background) // placeholder image during loading
-                    .error(R.drawable.ic_launcher_background) // image to show in case of error
-                    .into(holder.gameImage);
-        } else {
-            holder.gameImage.setImageResource(R.drawable.ic_launcher_background);
-        }
+        // פתיחת הטריילר בלחיצה
+        holder.gameTrailerLink.setOnClickListener(v -> {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(game.getTrailerLink()));
+            context.startActivity(browserIntent);
+        });
     }
 
-    //returns the total number of items in the game list
+
     @Override
     public int getItemCount() {
         return gameList.size();
     }
 
-    //updates the game list and notifies the adapter of the change
     public void updateList(List<Game> newList) {
         gameList = new ArrayList<>(newList);
         notifyDataSetChanged();
     }
 
     public static class GameViewHolder extends RecyclerView.ViewHolder {
-        TextView gameTitle, gameGenre, gameRating, gameReleaseDate;
+        TextView gameTitle, gameGenre, gameRating, gameReleaseDate, gamePublisher, gameDescription, gameTrailerLink;
         ImageView gameImage;
+        View expandableView;
 
-        // viewHolder class to hold the views for each game item
         public GameViewHolder(@NonNull View itemView) {
             super(itemView);
             gameTitle = itemView.findViewById(R.id.gameTitle);
             gameGenre = itemView.findViewById(R.id.gameGenre);
             gameRating = itemView.findViewById(R.id.gameRating);
             gameReleaseDate = itemView.findViewById(R.id.gameReleaseDate);
+            gamePublisher = itemView.findViewById(R.id.gamePublisher);
+            gameDescription = itemView.findViewById(R.id.gameDescription);
+            gameTrailerLink = itemView.findViewById(R.id.gameTrailerLink);
             gameImage = itemView.findViewById(R.id.gameImage);
+            expandableView = itemView.findViewById(R.id.expandableView);
         }
     }
+
 }
