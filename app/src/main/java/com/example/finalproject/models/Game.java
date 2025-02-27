@@ -15,12 +15,11 @@ public class Game {
     @SerializedName("background_image")
     private String imageUrl; // תמונת המשחק
 
-    @SerializedName("description_raw")
-    private String description; // תיאור המשחק
+    @SerializedName("platforms")
+    private List<PlatformWrapper> platforms; // רשימת פלטפורמות
 
     @SerializedName("genres")
     private List<Genre> genres; // רשימת ז'אנרים
-
 
     @SerializedName("rating")
     private double rating; // דירוג המשחק
@@ -44,8 +43,14 @@ public class Game {
         return imageUrl != null ? imageUrl : "";
     }
 
-    public String getDescription() {
-        return description != null && !description.isEmpty() ? description : "No description available.";
+    // מחזיר רשימה של כל הפלטפורמות הנתמכות כטקסט
+    public String getPlatforms() {
+        if (platforms == null || platforms.isEmpty()) {
+            return "Unknown Platform";
+        }
+        return platforms.stream()
+                .map(wrapper -> wrapper.platform.name)
+                .collect(Collectors.joining(", "));
     }
 
     public double getRating() {
@@ -71,7 +76,7 @@ public class Game {
                 : "https://www.youtube.com/results?search_query=" + title.replace(" ", "+") + "+game+trailer";
     }
 
-    // מחלקות פנימיות לטיפול בז'אנרים, מפתחים ומפרסמים
+    // מחלקה פנימית לטיפול בז'אנרים
     public static class Genre {
         @SerializedName("name")
         private String name;
@@ -79,5 +84,15 @@ public class Game {
         public String getName() {
             return name != null ? name : "Unknown";
         }
+    }
+    // מחלקה פנימית לפלטפורמות
+    public static class PlatformWrapper {
+        @SerializedName("platform")
+        private Platform platform;
+    }
+
+    public static class Platform {
+        @SerializedName("name")
+        private String name;
     }
 }

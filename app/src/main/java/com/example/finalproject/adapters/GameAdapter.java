@@ -36,34 +36,22 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
     @Override
     public void onBindViewHolder(@NonNull GameViewHolder holder, int position) {
         Game game = gameList.get(position);
+        if (game == null) return;
 
-        // הצגת מידע בסיסי
         holder.gameTitle.setText(game.getTitle());
-        holder.gameGenre.setText("Genre: " + game.getFirstGenre());
+        holder.gameGenre.setText("Genre: " + (!game.getFirstGenre().isEmpty() ? game.getFirstGenre() : "Unknown Genre"));
         holder.gameRating.setText("Rating: " + (game.getRating() > 0 ? String.valueOf(game.getRating()) : "Unknown Rating"));
-        holder.gameReleaseDate.setText("Release Date: " + game.getReleaseDate());
+        holder.gameReleaseDate.setText("Release Date: " + (!game.getReleaseDate().isEmpty() ? game.getReleaseDate() : "Unknown Date"));
+        holder.gamePlatform.setText("Platform: " + (!game.getPlatforms().isEmpty() ? game.getPlatforms() : "Unknown Platform"));
+
         // טעינת תמונה
         Glide.with(context)
                 .load(game.getImageUrl())
                 .placeholder(R.drawable.ic_launcher_background)
                 .error(R.drawable.ic_launcher_background)
                 .into(holder.gameImage);
-
-        // לחיצה על כל הכרטיס תפתח/תסגור את הפרטים הנוספים
-        holder.itemView.setOnClickListener(v -> {
-            if (holder.expandableView.getVisibility() == View.VISIBLE) {
-                holder.expandableView.setVisibility(View.GONE);
-            } else {
-                holder.expandableView.setVisibility(View.VISIBLE);
-            }
-        });
-
-        // פתיחת הטריילר בלחיצה
-        holder.gameTrailerLink.setOnClickListener(v -> {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(game.getTrailerLink()));
-            context.startActivity(browserIntent);
-        });
     }
+
 
 
     @Override
@@ -77,7 +65,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
     }
 
     public static class GameViewHolder extends RecyclerView.ViewHolder {
-        TextView gameTitle, gameGenre, gameRating, gameReleaseDate, gameTrailerLink;
+        TextView gameTitle, gameGenre, gameRating, gameReleaseDate, gamePlatform, gameTrailerLink;
         ImageView gameImage;
         View expandableView;
 
@@ -88,6 +76,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
             gameRating = itemView.findViewById(R.id.gameRating);
             gameReleaseDate = itemView.findViewById(R.id.gameReleaseDate);
             gameTrailerLink = itemView.findViewById(R.id.gameTrailerLink);
+            gamePlatform = itemView.findViewById(R.id.gamePlatform);
             gameImage = itemView.findViewById(R.id.gameImage);
             expandableView = itemView.findViewById(R.id.expandableView); // האזור שמוסתר כברירת מחדל
         }
