@@ -50,9 +50,29 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
                 .placeholder(R.drawable.ic_launcher_background)
                 .error(R.drawable.ic_launcher_background)
                 .into(holder.gameImage);
+
+        // הצגת טריילר
+        if (game.getTrailerLink() != null && !game.getTrailerLink().isEmpty()) {
+            holder.gameTrailerLink.setVisibility(View.VISIBLE);
+            holder.gameTrailerLink.setOnClickListener(v -> {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(game.getTrailerLink()));
+                context.startActivity(browserIntent);
+            });
+        } else {
+            holder.gameTrailerLink.setVisibility(View.GONE);
+        }
+
+        // כפתור הרחבה - לחיצה תפתח/תסגור את הפרטים הנוספים
+        holder.expandIcon.setOnClickListener(v -> {
+            if (holder.expandableView.getVisibility() == View.VISIBLE) {
+                holder.expandableView.setVisibility(View.GONE);
+                holder.expandIcon.setImageResource(R.drawable.ic_expand_more); // חץ מטה
+            } else {
+                holder.expandableView.setVisibility(View.VISIBLE);
+                holder.expandIcon.setImageResource(R.drawable.ic_expand_less); // חץ מעלה
+            }
+        });
     }
-
-
 
     @Override
     public int getItemCount() {
@@ -66,7 +86,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
 
     public static class GameViewHolder extends RecyclerView.ViewHolder {
         TextView gameTitle, gameGenre, gameRating, gameReleaseDate, gamePlatform, gameTrailerLink;
-        ImageView gameImage;
+        ImageView gameImage, expandIcon;
         View expandableView;
 
         public GameViewHolder(@NonNull View itemView) {
@@ -78,6 +98,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
             gameTrailerLink = itemView.findViewById(R.id.gameTrailerLink);
             gamePlatform = itemView.findViewById(R.id.gamePlatform);
             gameImage = itemView.findViewById(R.id.gameImage);
+            expandIcon = itemView.findViewById(R.id.expandIcon);
             expandableView = itemView.findViewById(R.id.expandableView); // האזור שמוסתר כברירת מחדל
         }
     }
