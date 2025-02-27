@@ -3,6 +3,7 @@ package com.example.finalproject.fragments;
 import android.app.AlertDialog;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -152,8 +153,12 @@ public class FragmentGames extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     gameList.clear();
                     gameList.addAll(response.body().getResults());
+
+                    Log.d("API_RESPONSE", "Loaded " + gameList.size() + " games");
+
                     applyFilters();
                 } else {
+                    Log.e("API_RESPONSE", "Failed to load games: " + response.message());
                     Toast.makeText(getContext(), "Failed to load games", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -167,6 +172,8 @@ public class FragmentGames extends Fragment {
 
     private void applyFilters() {
         filteredList.clear();
+
+        Log.d("FILTER", "Before filtering: " + gameList.size() + " games");
 
         for (Game game : gameList) {
             if (game == null) continue;
@@ -190,6 +197,9 @@ public class FragmentGames extends Fragment {
             }
         }
 
+        Log.d("FILTER", "After filtering: " + filteredList.size() + " games");
+
         gameAdapter.updateList(filteredList);
+        gameAdapter.notifyDataSetChanged();
     }
 }
