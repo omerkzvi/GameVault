@@ -154,7 +154,7 @@ public class FragmentGames extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void loadGamesFromAPI() {
-        String dates = "2020-01-01," + java.time.LocalDate.now();
+        String dates = "2020-01-01," + java.time.LocalDate.now(); //sync aotomatic
         Call<GameResponse> call = RetrofitClient.getApiService().getGames(API_KEY, dates, null);
         call.enqueue(new Callback<GameResponse>() {
             @Override
@@ -164,7 +164,7 @@ public class FragmentGames extends Fragment {
                     gameList.addAll(response.body().getResults());
                     applyFilters();
                 } else {
-                    Toast.makeText(getContext(), "Failed to load games", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Failed to load games", Toast.LENGTH_SHORT).show(); // error message
                 }
             }
 
