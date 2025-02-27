@@ -187,17 +187,34 @@ public class FragmentGames extends Fragment {
         filteredList.clear();
 
         for (Game game : gameList) {
-            boolean matchesSearch = searchText.isEmpty() || (game.getTitle() != null && game.getTitle().toLowerCase().contains(searchText.toLowerCase()));
-            boolean matchesYear = selectedYear.isEmpty() || (game.getReleaseDate() != null && game.getReleaseDate().startsWith(selectedYear));
-            boolean matchesGenre = selectedGenre.isEmpty() || game.getFirstGenre().equalsIgnoreCase(selectedGenre);
-            boolean matchesPlatform = selectedPlatform.isEmpty() || game.getPlatform().equalsIgnoreCase(selectedPlatform);
+            // Check if game object is null before using it
+            if (game == null) {
+                continue; // Skip this iteration if game is null
+            }
+
+            // Safe checks for null values before filtering
+            boolean matchesSearch = searchText.isEmpty() ||
+                    (game.getTitle() != null && game.getTitle().toLowerCase().contains(searchText.toLowerCase()));
+
+            boolean matchesYear = selectedYear.isEmpty() ||
+                    (game.getReleaseDate() != null && game.getReleaseDate().startsWith(selectedYear));
+
+            boolean matchesGenre = selectedGenre.isEmpty() ||
+                    (game.getFirstGenre() != null && game.getFirstGenre().equalsIgnoreCase(selectedGenre));
+
+            boolean matchesPlatform = selectedPlatform.isEmpty() ||
+                    (game.getPlatform() != null && game.getPlatform().equalsIgnoreCase(selectedPlatform));
+
             boolean matchesRating = game.getRating() >= minRating && game.getRating() <= maxRating;
 
+            // If all conditions are met, add the game to the filtered list
             if (matchesSearch && matchesYear && matchesGenre && matchesPlatform && matchesRating) {
                 filteredList.add(game);
             }
         }
 
+        // Update RecyclerView with filtered list
         gameAdapter.updateList(filteredList);
     }
+
 }

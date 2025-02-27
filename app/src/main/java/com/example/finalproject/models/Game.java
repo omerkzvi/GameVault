@@ -53,7 +53,6 @@ public class Game {
                 : "Unknown Platform";
     }
 
-    // מחזיר את שם הז'אנר הראשון, או "Unknown" אם אין נתון
     public String getFirstGenre() {
         return (genres != null && !genres.isEmpty() && genres.get(0).getName() != null)
                 ? genres.get(0).getName()
