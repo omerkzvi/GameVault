@@ -77,7 +77,7 @@
                     android:textColor="@android:color/black"/>
             </LinearLayout>
 
-
+            <!-- כפתור הרחבה -->
             <ImageView
                 android:id="@+id/expandIcon"
                 android:layout_width="24dp"
@@ -85,7 +85,7 @@
                 android:src="@drawable/ic_expand_more"/>
         </LinearLayout>
 
-
+        <!-- פרטים נוספים שמוסתרים כברירת מחדל -->
         <LinearLayout
             android:id="@+id/expandableView"
             android:layout_width="match_parent"

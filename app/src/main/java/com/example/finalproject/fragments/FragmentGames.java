@@ -42,7 +42,8 @@ public class FragmentGames extends Fragment {
     private Button filterButton;
 
     // variables for filter parameters
-    private String selectedYear = "", selectedGenre = "", selectedPublisher = "", selectedRating = "";
+// Variables for filter parameters
+    private String selectedYear = "", selectedGenre = "", selectedPlatform = "", selectedRating = "";
     private double minRating = 0, maxRating = 5;
     private String searchText = "";
     private static final String API_KEY = "41ce34c117204cf696fd040cc43dc20c"; // API Key
@@ -102,7 +103,7 @@ public class FragmentGames extends Fragment {
         final Spinner yearSpinner = dialogView.findViewById(R.id.yearSpinner);
         final Spinner genreSpinner = dialogView.findViewById(R.id.genreSpinner);
         final Spinner ratingSpinner = dialogView.findViewById(R.id.ratingSpinner);
-        final Spinner publisherSpinner = dialogView.findViewById(R.id.publisherSpinner);
+        final Spinner platformSpinner = dialogView.findViewById(R.id.platformSpinner);
 
         // setting values for each spinner
         setUpSpinner(yearSpinner, new String[]{"All", "2024", "2023", "2022", "2021", "2020"});
@@ -110,21 +111,21 @@ public class FragmentGames extends Fragment {
         setUpSpinner(ratingSpinner, new String[]{"All", "0-1", "1-2", "2-3", "3-4", "4-5"});
 
         // dynamically populate publishers from the API data
-        Set<String> publisherOptions = new HashSet<>();
-        publisherOptions.add("All");
+        Set<String> platformOptions = new HashSet<>();
+        platformOptions.add("All");
         for (Game game : gameList) {
-            String publisher = game.getPublisher();
-            if (publisher != null && !publisherOptions.contains(publisher)) {
-                publisherOptions.add(publisher);
+            String publisher = game.getPlatform();
+            if (publisher != null && !platformOptions.contains(publisher)) {
+                platformOptions.add(publisher);
             }
         }
-        setUpSpinner(publisherSpinner, publisherOptions.toArray(new String[0]));
+        setUpSpinner(platformSpinner, platformOptions.toArray(new String[0]));
 
         // when the apply button is clicked, apply selected filters
         builder.setPositiveButton("Apply", (dialog, which) -> {
             selectedYear = getSelectedSpinnerValue(yearSpinner); // get selected year
             selectedGenre = getSelectedSpinnerValue(genreSpinner); // get selected genre
-            selectedPublisher = getSelectedSpinnerValue(publisherSpinner); // get selected publisher
+            selectedPlatform = getSelectedSpinnerValue(platformSpinner); // get selected publisher
             selectedRating = getSelectedSpinnerValue(ratingSpinner); // get selected rating range
 
             // parsing rating range if exists
@@ -200,7 +201,7 @@ public class FragmentGames extends Fragment {
             boolean matchesSearch = searchText.isEmpty() || (game.getTitle() != null && game.getTitle().toLowerCase().contains(searchText.toLowerCase()));
             boolean matchesYear = selectedYear.isEmpty() || (game.getReleaseDate() != null && game.getReleaseDate().startsWith(selectedYear));
             boolean matchesGenre = selectedGenre.isEmpty() || game.getFirstGenre().equalsIgnoreCase(selectedGenre);
-            boolean matchesPublisher = selectedPublisher.isEmpty() || game.getPublisher().equalsIgnoreCase(selectedPublisher);
+            boolean matchesPublisher = selectedPlatform.isEmpty() || game.getPlatform().equalsIgnoreCase(selectedPlatform);
             boolean matchesRating = game.getRating() >= minRating && game.getRating() <= maxRating;
 
             if (matchesSearch && matchesYear && matchesGenre && matchesPublisher && matchesRating) {

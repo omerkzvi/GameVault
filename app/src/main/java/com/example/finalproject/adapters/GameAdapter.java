@@ -44,8 +44,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
         holder.gameGenre.setText("Genre: " + game.getFirstGenre());
         holder.gameRating.setText("Rating: " + (game.getRating() > 0 ? String.valueOf(game.getRating()) : "Unknown Rating"));
         holder.gameReleaseDate.setText("Release Date: " + game.getReleaseDate());
-        holder.gamePublisher.setText("Publisher: " + game.getPublisher());
-        holder.gameDescription.setText(game.getDescription());
+        holder.gamePlatform.setText("Platform: " + game.getPlatform());
 
         // load game image using Glide library with a placeholder and error image
         Glide.with(context)
@@ -84,7 +83,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
 
     // ViewHolder class that holds references to the views in each item layout
     public static class GameViewHolder extends RecyclerView.ViewHolder {
-        TextView gameTitle, gameGenre, gameRating, gameReleaseDate, gamePublisher, gameDescription, gameTrailerLink;
+        TextView gameTitle, gameGenre, gameRating, gameReleaseDate, gamePlatform, gameTrailerLink;
         ImageView gameImage;
         View expandableView; // view containing additional details that can be expanded or collapsed
 
@@ -96,10 +95,9 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
             gameGenre = itemView.findViewById(R.id.gameGenre);
             gameRating = itemView.findViewById(R.id.gameRating);
             gameReleaseDate = itemView.findViewById(R.id.gameReleaseDate);
-            gamePublisher = itemView.findViewById(R.id.gamePublisher);
-            gameDescription = itemView.findViewById(R.id.gameDescription);
             gameTrailerLink = itemView.findViewById(R.id.gameTrailerLink);
             gameImage = itemView.findViewById(R.id.gameImage);
+            gamePlatform = itemView.findViewById(R.id.gamePlatform);
             expandableView = itemView.findViewById(R.id.expandableView);
         }
     }
