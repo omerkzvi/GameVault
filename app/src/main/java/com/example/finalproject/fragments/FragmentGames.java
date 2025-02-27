@@ -156,7 +156,11 @@ public class FragmentGames extends Fragment {
 
                     Log.d("API_RESPONSE", "Loaded " + gameList.size() + " games");
 
-                    applyFilters();
+                    if (gameList.isEmpty()) {
+                        Toast.makeText(getContext(), "No games found!", Toast.LENGTH_LONG).show();
+                    } else {
+                        applyFilters();
+                    }
                 } else {
                     Log.e("API_RESPONSE", "Failed to load games: " + response.message());
                     Toast.makeText(getContext(), "Failed to load games", Toast.LENGTH_SHORT).show();
