@@ -36,40 +36,49 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
     }
 
     // called to bind data to the ViewHolder for each item
-    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull GameViewHolder holder, int position) {
         Game game = gameList.get(position);
+        if (game == null) return; // הגנה מפני ערכים חסרים
 
-        // display basic game information in respective TextViews
-        holder.gameTitle.setText(game.getTitle());
-        holder.gameGenre.setText("Genre: " + game.getFirstGenre());
+        holder.gameTitle.setText(game.getTitle() != null ? game.getTitle() : "Unknown Title");
+        holder.gameGenre.setText("Genre: " + (!game.getFirstGenre().isEmpty() ? game.getFirstGenre() : "Unknown Genre"));
         holder.gameRating.setText("Rating: " + (game.getRating() > 0 ? String.valueOf(game.getRating()) : "Unknown Rating"));
-        holder.gameReleaseDate.setText("Release Date: " + game.getReleaseDate());
-        holder.gamePlatform.setText("Platform: " + game.getPlatform());
+        holder.gameReleaseDate.setText("Release Date: " + (!game.getReleaseDate().isEmpty() ? game.getReleaseDate() : "Unknown Date"));
+        holder.gamePlatform.setText("Platform: " + (!game.getPlatform().isEmpty() ? game.getPlatform() : "Unknown Platform"));
 
-        // load game image using Glide library with a placeholder and error image
-        Glide.with(context)
-                .load(game.getImageUrl())
-                .placeholder(R.drawable.ic_launcher_background)
-                .error(R.drawable.ic_launcher_background)
-                .into(holder.gameImage);
+        // טעינת תמונה בצורה בטוחה
+        if (game.getImageUrl() != null && !game.getImageUrl().isEmpty()) {
+            Glide.with(context)
+                    .load(game.getImageUrl())
+                    .placeholder(R.drawable.ic_launcher_background)
+                    .error(R.drawable.ic_launcher_background)
+                    .into(holder.gameImage);
+        } else {
+            holder.gameImage.setImageResource(R.drawable.ic_launcher_background);
+        }
 
-        // toggle visibility of additional game details when clicking on the item view
+        // הצגת פרטי משחק בלחיצה
         holder.itemView.setOnClickListener(v -> {
             if (holder.expandableView.getVisibility() == View.VISIBLE) {
-                holder.expandableView.setVisibility(View.GONE); // hide additional details
+                holder.expandableView.setVisibility(View.GONE);
             } else {
-                holder.expandableView.setVisibility(View.VISIBLE); // show additional details
+                holder.expandableView.setVisibility(View.VISIBLE);
             }
         });
 
-        // open game trailer in browser when clicking on the trailer link
-        holder.gameTrailerLink.setOnClickListener(v -> {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(game.getTrailerLink()));
-            context.startActivity(browserIntent); // launch browser to open trailer link
-        });
+        // פתיחת הטריילר רק אם יש קישור תקף
+        if (game.getTrailerLink() != null && !game.getTrailerLink().isEmpty()) {
+            holder.gameTrailerLink.setVisibility(View.VISIBLE);
+            holder.gameTrailerLink.setOnClickListener(v -> {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(game.getTrailerLink()));
+                context.startActivity(browserIntent);
+            });
+        } else {
+            holder.gameTrailerLink.setVisibility(View.GONE);
+        }
     }
+
 
     // return the total number of items in the list
     @Override

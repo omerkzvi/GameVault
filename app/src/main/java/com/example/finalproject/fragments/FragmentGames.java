@@ -205,7 +205,8 @@ public class FragmentGames extends Fragment {
             boolean matchesPlatform = selectedPlatform.isEmpty() ||
                     (game.getPlatform() != null && game.getPlatform().equalsIgnoreCase(selectedPlatform));
 
-            boolean matchesRating = game.getRating() >= minRating && game.getRating() <= maxRating;
+            boolean matchesRating = game.getRating() > 0 && game.getRating() >= minRating && game.getRating() <= maxRating;
+
 
             // If all conditions are met, add the game to the filtered list
             if (matchesSearch && matchesYear && matchesGenre && matchesPlatform && matchesRating) {

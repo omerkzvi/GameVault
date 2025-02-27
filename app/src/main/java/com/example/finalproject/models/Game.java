@@ -44,7 +44,7 @@ public class Game {
     }
 
     public double getRating() {
-        return Double.isNaN(rating) ? 0.0 : rating;
+        return (rating >= 0 && rating <= 5) ? rating : 0.0;
     }
 
     public String getPlatform() {
@@ -52,16 +52,14 @@ public class Game {
             return "Unknown Platform";
         }
 
-        // יצירת רשימה של שמות הפלטפורמות
         List<String> platformNames = new ArrayList<>();
         for (PlatformWrapper wrapper : platforms) {
             if (wrapper != null && wrapper.platform != null && wrapper.platform.name != null) {
                 platformNames.add(wrapper.platform.name);
             }
         }
-        return platformNames.isEmpty() ? "Unknown Platform" : String.join(", ", platformNames);
+        return !platformNames.isEmpty() ? String.join(", ", platformNames) : "Unknown Platform";
     }
-
 
     public String getFirstGenre() {
         return (genres != null && !genres.isEmpty() && genres.get(0).getName() != null)
