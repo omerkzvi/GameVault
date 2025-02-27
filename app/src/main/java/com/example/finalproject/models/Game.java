@@ -48,10 +48,20 @@ public class Game {
     }
 
     public String getPlatform() {
-        return (platforms != null && !platforms.isEmpty() && platforms.get(0).platform != null)
-                ? platforms.get(0).platform.name
-                : "Unknown Platform";
+        if (platforms == null || platforms.isEmpty()) {
+            return "Unknown Platform";
+        }
+
+        // יצירת רשימה של שמות הפלטפורמות
+        List<String> platformNames = new ArrayList<>();
+        for (PlatformWrapper wrapper : platforms) {
+            if (wrapper != null && wrapper.platform != null && wrapper.platform.name != null) {
+                platformNames.add(wrapper.platform.name);
+            }
+        }
+        return platformNames.isEmpty() ? "Unknown Platform" : String.join(", ", platformNames);
     }
+
 
     public String getFirstGenre() {
         return (genres != null && !genres.isEmpty() && genres.get(0).getName() != null)
