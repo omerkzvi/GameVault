@@ -3,34 +3,31 @@ package com.example.finalproject.models;
 import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Game {
     @SerializedName("name")
-    private String title; // שם המשחק
+    private String title;
 
     @SerializedName("released")
-    private String releaseDate; // release date
+    private String releaseDate;
 
     @SerializedName("background_image")
-    private String imageUrl; // game image
+    private String imageUrl;
 
     @SerializedName("genres")
-    private List<Genre> genres; // list of genres
+    private List<Genre> genres;
 
     @SerializedName("platforms")
-    private List<PlatformWrapper> platforms; // list of platforms
+    private List<PlatformWrapper> platforms;
 
     @SerializedName("rating")
-    private double rating; // game rating
+    private double rating;
 
     @SerializedName("trailer")
-    private String trailerLink; // trailer
+    private String trailerLink;
 
-    // Empty constructor (required for Retrofit)
     public Game() {}
 
-    // Getters עם בדיקות ל-null
     public String getTitle() {
         return title != null ? title : "Unknown Title";
     }
@@ -67,19 +64,16 @@ public class Game {
                 : "Unknown Genre";
     }
 
-    // מחזיר רשימה של כל הז'אנרים כטקסט מופרד בפסיקים
     public List<Genre> getGenres() {
         return genres != null ? genres : new ArrayList<>();
     }
 
-    // Getter לקישור לטריילר (אם לא קיים, מחזיר חיפוש ביוטיוב)
     public String getTrailerLink() {
         return (trailerLink != null && !trailerLink.isEmpty())
                 ? trailerLink
-                : "https://www.youtube.com/results?search_query=" + title.replace(" ", "+") + "+game+trailer";
+                : "https://www.youtube.com/results?search_query=" + (title != null ? title.replace(" ", "+") : "game") + "+game+trailer";
     }
 
-    // מחלקות פנימיות לז'אנרים, ופלטפורמות
     public static class Genre {
         @SerializedName("name")
         private String name;
