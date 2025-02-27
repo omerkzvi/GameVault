@@ -99,7 +99,7 @@ public class FragmentGames extends Fragment {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_filter, null);
         builder.setView(dialogView);
 
-        // creating spinners for year, genre, rating, publisher filters
+        // creating spinners for year, genre, rating,platdorm filters
         final Spinner yearSpinner = dialogView.findViewById(R.id.yearSpinner);
         final Spinner genreSpinner = dialogView.findViewById(R.id.genreSpinner);
         final Spinner ratingSpinner = dialogView.findViewById(R.id.ratingSpinner);
@@ -110,22 +110,11 @@ public class FragmentGames extends Fragment {
         setUpSpinner(genreSpinner, new String[]{"All", "Action", "RPG", "Shooter", "Adventure", "Strategy"});
         setUpSpinner(ratingSpinner, new String[]{"All", "0-1", "1-2", "2-3", "3-4", "4-5"});
 
-        // dynamically populate publishers from the API data
-        Set<String> platformOptions = new HashSet<>();
-        platformOptions.add("All");
-        for (Game game : gameList) {
-            String publisher = game.getPlatform();
-            if (publisher != null && !platformOptions.contains(publisher)) {
-                platformOptions.add(publisher);
-            }
-        }
-        setUpSpinner(platformSpinner, platformOptions.toArray(new String[0]));
-
         // when the apply button is clicked, apply selected filters
         builder.setPositiveButton("Apply", (dialog, which) -> {
             selectedYear = getSelectedSpinnerValue(yearSpinner); // get selected year
             selectedGenre = getSelectedSpinnerValue(genreSpinner); // get selected genre
-            selectedPlatform = getSelectedSpinnerValue(platformSpinner); // get selected publisher
+            selectedPlatform = getSelectedSpinnerValue(platformSpinner); // get selected platform
             selectedRating = getSelectedSpinnerValue(ratingSpinner); // get selected rating range
 
             // parsing rating range if exists
@@ -201,10 +190,10 @@ public class FragmentGames extends Fragment {
             boolean matchesSearch = searchText.isEmpty() || (game.getTitle() != null && game.getTitle().toLowerCase().contains(searchText.toLowerCase()));
             boolean matchesYear = selectedYear.isEmpty() || (game.getReleaseDate() != null && game.getReleaseDate().startsWith(selectedYear));
             boolean matchesGenre = selectedGenre.isEmpty() || game.getFirstGenre().equalsIgnoreCase(selectedGenre);
-            boolean matchesPublisher = selectedPlatform.isEmpty() || game.getPlatform().equalsIgnoreCase(selectedPlatform);
+            boolean matchesPlatform = selectedPlatform.isEmpty() || game.getPlatform().equalsIgnoreCase(selectedPlatform);
             boolean matchesRating = game.getRating() >= minRating && game.getRating() <= maxRating;
 
-            if (matchesSearch && matchesYear && matchesGenre && matchesPublisher && matchesRating) {
+            if (matchesSearch && matchesYear && matchesGenre && matchesPlatform && matchesRating) {
                 filteredList.add(game);
             }
         }

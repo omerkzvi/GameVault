@@ -10,27 +10,24 @@ public class Game {
     private String title; // שם המשחק
 
     @SerializedName("released")
-    private String releaseDate; // תאריך יציאה
+    private String releaseDate; // release date
 
     @SerializedName("background_image")
-    private String imageUrl; // תמונת המשחק
-
-    @SerializedName("description_raw")
-    private String description; // תיאור המשחק
+    private String imageUrl; // game image
 
     @SerializedName("genres")
-    private List<Genre> genres; // רשימת ז'אנרים
+    private List<Genre> genres; // list of genres
 
-    @SerializedName("publishers")
-    private List<Publisher> publishers; // רשימת מפרסמים
+    @SerializedName("platforms")
+    private List<PlatformWrapper> platforms; // list of platforms
 
     @SerializedName("rating")
-    private double rating; // דירוג המשחק
+    private double rating; // game rating
 
     @SerializedName("trailer")
-    private String trailerLink; // קישור לטריילר
+    private String trailerLink; // trailer
 
-    // קונסטרקטור ריק (דרוש ל-Retrofit)
+    // Empty constructor (required for Retrofit)
     public Game() {}
 
     // Getters עם בדיקות ל-null
@@ -46,14 +43,15 @@ public class Game {
         return imageUrl != null ? imageUrl : "";
     }
 
-    public String getDescription() {
-        return description != null && !description.isEmpty() ? description : "No description available.";
-    }
-
     public double getRating() {
         return Double.isNaN(rating) ? 0.0 : rating;
     }
 
+    public String getPlatform() {
+        return (platforms != null && !platforms.isEmpty() && platforms.get(0).platform != null)
+                ? platforms.get(0).platform.name
+                : "Unknown Platform";
+    }
 
     // מחזיר את שם הז'אנר הראשון, או "Unknown" אם אין נתון
     public String getFirstGenre() {
@@ -62,24 +60,9 @@ public class Game {
                 : "Unknown Genre";
     }
 
-    // מחזיר את שם המפרסם הראשון, או "Unknown Publisher" אם אין
-    public String getPublisher() {
-        return (publishers != null && !publishers.isEmpty() && publishers.get(0).getName() != null)
-                ? publishers.get(0).getName()
-                : "Unknown Publisher";
-    }
-
     // מחזיר רשימה של כל הז'אנרים כטקסט מופרד בפסיקים
     public List<Genre> getGenres() {
         return genres != null ? genres : new ArrayList<>();
-    }
-
-
-    // מחזיר רשימה של כל המפרסמים כטקסט מופרד בפסיקים
-    public String getPublishersList() {
-        return (publishers != null && !publishers.isEmpty())
-                ? publishers.stream().map(Publisher::getName).collect(Collectors.joining(", "))
-                : "Unknown Publisher";
     }
 
     // Getter לקישור לטריילר (אם לא קיים, מחזיר חיפוש ביוטיוב)
@@ -89,7 +72,7 @@ public class Game {
                 : "https://www.youtube.com/results?search_query=" + title.replace(" ", "+") + "+game+trailer";
     }
 
-    // מחלקות פנימיות לטיפול בז'אנרים, מפתחים ומפרסמים
+    // מחלקות פנימיות לז'אנרים, ופלטפורמות
     public static class Genre {
         @SerializedName("name")
         private String name;
@@ -99,12 +82,13 @@ public class Game {
         }
     }
 
-    public static class Publisher {
+    public static class PlatformWrapper {
+        @SerializedName("platform")
+        private Platform platform;
+    }
+
+    public static class Platform {
         @SerializedName("name")
         private String name;
-
-        public String getName() {
-            return name != null ? name : "Unknown";
-        }
     }
 }
